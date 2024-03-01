@@ -25,3 +25,6 @@ spring:
         database: mysql
         database-platform: org.hibernate.dialect.MySQLDialect
 
+# application:
+#     config:
+#         bcrypt-log-rounds: 4
