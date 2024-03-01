@@ -1,5 +1,7 @@
 package rd.useridentity;
 
+import java.util.NoSuchElementException;
+
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
@@ -33,28 +35,42 @@ public class UserService {
 
     public void registerUser(User user) {
 
-        if(validator.validateUser(user)) {
+        if(!repository.existsById(user.getEmail().toLowerCase())) {
 
-            user.setEmail(user.getEmail().toLowerCase());
-            user.setPassword(
-                passwordEncoder.encode(user.getPassword())
-            );
+            if(validator.validateUser(user)) {
 
-            repository.save(user);
-        }   
+                user.setEmail(user.getEmail().toLowerCase());
+                user.setPassword(
+                    passwordEncoder.encode(user.getPassword())
+                );
+                
+                repository.save(user);
+            } 
+        }
+        else {
+            throw new IllegalArgumentException("The email address " + user.getEmail() + " already registered.");
+        }
+          
     }
 
     public void updateUserData(User user) {
 
-        if(validator.validateUser(user)) {
+        if(repository.existsById(user.getEmail().toLowerCase())) {
+
+            if(validator.validateUser(user)) {
             
-            user.setEmail(user.getEmail().toLowerCase());
-            user.setPassword(
-                passwordEncoder.encode(user.getPassword())
-            );
-            
-            repository.save(user);
-        } 
+                user.setEmail(user.getEmail().toLowerCase());
+                user.setPassword(
+                    passwordEncoder.encode(user.getPassword())
+                );
+                
+                repository.save(user);
+            } 
+        }
+        else {
+            throw new NoSuchElementException("Could not find account with " + user.getEmail() + " address.");
+        }
+
     }
 
     public void deleteUserById(String email) {
