@@ -13,6 +13,62 @@ spring:
         name: gateway
     config:
         import: optional:configserver:http://configserver:8888
+    cloud:
+        gateway:
+            discovery:
+                locator:
+                    enabled: true
+            routes: 
+            - id: authentication
+              uri: http://localhost:8050
+              predicates:
+              - Path=/authenticate
+              filters:
+              - PrefixPath=/api
+
+            - id: user-creation
+              uri: http://localhost:8060
+              predicates:
+              - Path=/user/new
+              filters:
+              - PrefixPath=/api
+
+            - id: user-profile
+              uri: http://localhost:8060
+              predicates:
+              - Path=/user/profile/**
+              filters:
+              - PrefixPath=/api
+              - AuthenticationFilter
+
+            - id: user-update
+              uri: http://localhost:8060
+              predicates:
+              - Path=/user/update
+              filters:
+              - PrefixPath=/api
+
+            - id: post
+              uri: http://localhost:8090
+              predicates:
+              - Path=/post/**
+              filters:
+              - PrefixPath=/api
+              - AuthenticationFilter
+
+            - id: discovery
+              uri: http://localhost:8700
+              predicates:
+              - Path=/eureka
+              filters:
+              - RewritePath=/eureka,/
+
+            - id: mongo-express
+              uri: http://localhost:8081
+              predicates:
+              - Path=/mongo
+              filters:
+              - RewritePath=/mongo,/
 
 application:
   config:
