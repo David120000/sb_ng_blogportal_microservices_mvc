@@ -1,0 +1,23 @@
+eureka:
+    instance:
+        hostname: localhost
+    client:
+        service-url:
+            defaultZone: http://localhost:8700/eureka
+
+server:
+  port: 8090
+
+spring:
+    application:
+        name: posts
+    config:
+        import: optional:configserver:http://configserver:8888
+    data:
+        mongodb:
+            username: mongoroot
+            password: root
+            host: localhost
+            port: 27017
+            database: postsdb
+            authentication-database: admin
