@@ -13,3 +13,7 @@ spring:
         name: gateway
     config:
         import: optional:configserver:http://configserver:8888
+
+application:
+  config:
+    authenticationservice-url: http://localhost:8050/api/authorize
