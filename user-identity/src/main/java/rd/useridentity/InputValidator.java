@@ -7,7 +7,6 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 
-
 @Service
 public class InputValidator {
 
@@ -21,7 +20,7 @@ public class InputValidator {
         String emailRegex = "^[a-zA-Z0-9_!#$%&'*+/=?`{|}~^.-]+@[a-zA-Z0-9.-]+$";
         this.emailPattern = Pattern.compile(emailRegex);
 
-        String passwordRegex = "^(?=.*[A-Z])(?=.*[_-!@#$&*])(?=.*[0-9])(?=.*[a-z]).{6,}$";
+        String passwordRegex = "^(?=.*[A-Z])(?=.*[\\Q_-!@#$&*\\\\E])(?=.*[0-9])(?=.*[a-z]).{6,}$";
         this.passwordPattern = Pattern.compile(passwordRegex);
 
         this.enabledRoles = Arrays.asList("USER", "ADMIN");
