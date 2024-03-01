@@ -1,0 +1,49 @@
+eureka:
+    instance:
+        preferIpAddress: true
+    client:
+        service-url:
+            defaultZone: http://discovery:8700/eureka
+        
+server:
+  port: 8060
+
+spring:
+    application:
+        name: users
+    datasource:
+        driver-class-name: com.mysql.cj.jdbc.Driver
+        url: jdbc:mysql://mysqldb:3306/bloguserdb
+        username: mysqlroot
+        password: root
+    jpa:
+        hibernate:
+            ddl-auto: create
+        show-sql: true
+        database: mysql
+        database-platform: org.hibernate.dialect.MySQLDialect
+
+management:
+    tracing:
+        sampling:
+            probability: 1.0
+    zipkin:
+        tracing:
+            endpoint: http://zipkin:9411/api/v2/spans
+    endpoints:
+        web:
+            exposure:
+                include: "health,refresh"
+    health:
+        readinessstate:
+            enabled: true
+        livenessstate:
+            enabled: true
+    endpoint:
+        health:
+            probes:
+                enabled: true
+
+application:
+    config:
+        bcrypt-log-rounds: 4
