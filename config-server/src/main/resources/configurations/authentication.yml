@@ -1,0 +1,42 @@
+eureka:
+    instance:
+        preferIpAddress: true
+    client:
+        service-url:
+            defaultZone: http://discovery:8700/eureka
+
+server:
+  port: 8050
+
+spring:
+    application:
+        name: authentication
+
+management:
+    tracing:
+        sampling:
+            probability: 1.0
+    zipkin:
+        tracing:
+            endpoint: http://zipkin:9411/api/v2/spans
+    endpoints:
+        web:
+            exposure:
+                include: "health,refresh"
+    health:
+        readinessstate:
+            enabled: true
+        livenessstate:
+            enabled: true
+    endpoint:
+        health:
+            probes:
+                enabled: true
+
+application:
+    config:
+        bcrypt-log-rounds: 4
+        useridentityservice-url: http://userservice:8060/api/user/security/
+    jwt:
+        secretkey: 9367566B59703373367639792F423F4528482B4D6251655468576D5A71347435
+        expiration: 1800000
