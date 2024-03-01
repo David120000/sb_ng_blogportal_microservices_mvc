@@ -4,8 +4,6 @@ services:
   mongodb:
     container_name: mongo_db
     image: mongo
-    ports: 
-      - 27017:27017
     volumes:
       - mongo-data:/data
     environment:
@@ -32,8 +30,6 @@ services:
   mysqldb:
     container_name: mysql_db
     image: mysql
-    ports:
-      - "3306:3306"
     restart: unless-stopped
     environment:
       MYSQL_DATABASE: bloguserdb
@@ -42,6 +38,122 @@ services:
       MYSQL_ROOT_PASSWORD: root
     volumes:
     - mysql-data:/var/lib/mysql
+    networks:
+      - microservices
+  
+  configserver:
+    container_name: configserver
+    build:
+      context: ./config-server
+      dockerfile: ../java-microservice.Dockerfile
+    healthcheck:
+      test: "curl --fail --silent localhost:8888/actuator/health/readiness | grep UP || exit 1"
+      interval: 3s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    networks:
+      - microservices
+
+  postservice:
+    container_name: postservice
+    build:
+      context: ./post
+      dockerfile: ../java-microservice.Dockerfile
+    depends_on:
+      configserver:
+        condition: service_healthy
+      discovery:
+        condition: service_healthy
+      mongodb:
+        condition: service_started
+    networks:
+      - microservices
+
+  userservice:
+    container_name: userservice
+    build:
+      context: ./user-identity
+      dockerfile: ../java-microservice.Dockerfile
+    depends_on:
+      configserver:
+        condition: service_healthy
+      discovery:
+        condition: service_healthy
+      mysqldb:
+        condition: service_started
+    healthcheck:
+      test: "curl --fail --silent localhost:8060/actuator/health/readiness | grep UP || exit 1"
+      interval: 8s
+      timeout: 3s
+      retries: 5
+      start_period: 10s
+    networks:
+      - microservices
+
+  authenticationservice:
+    container_name: authenticationservice
+    build:
+      context: ./authentication
+      dockerfile: ../java-microservice.Dockerfile
+    depends_on:
+      configserver:
+        condition: service_healthy
+      userservice:
+        condition: service_healthy
+      discovery:
+        condition: service_healthy
+    healthcheck:
+      test: "curl --fail --silent localhost:8050/actuator/health/readiness | grep UP || exit 1"
+      interval: 8s
+      timeout: 3s
+      retries: 5
+      start_period: 8s
+    networks:
+      - microservices
+  
+  apigateway:
+    container_name: apigateway
+    build:
+      context: ./gateway
+      dockerfile: ../java-microservice.Dockerfile
+    depends_on:
+      configserver:
+        condition: service_healthy
+      authenticationservice:
+        condition: service_healthy
+      discovery:
+        condition: service_healthy
+    ports: 
+      - "8080:8080"
+    networks:
+      - microservices
+      - frontend
+
+  discovery:
+    container_name: discovery
+    build:
+      context: ./discovery
+      dockerfile: ../java-microservice.Dockerfile
+    depends_on:
+      configserver:
+        condition: service_healthy
+    ports:
+      - "8700:8700"
+    healthcheck:
+      test: "curl --fail --silent localhost:8700/actuator/health/readiness | grep UP || exit 1"
+      interval: 8s
+      timeout: 3s
+      retries: 5
+      start_period: 8s
+    networks:
+      - microservices
+
+  zipkin:
+    container_name: zipkin
+    image: openzipkin/zipkin
+    ports:
+      - "9411:9411"
     networks:
       - microservices
 
