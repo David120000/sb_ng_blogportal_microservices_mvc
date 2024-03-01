@@ -8,5 +8,15 @@
     "name": "application.config.jwt.expiration",
     "type": "java.lang.Integer",
     "description": "A description for 'application.config.jwt.expiration'"
+  },
+  {
+    "name": "application.config.bcrypt-log-rounds",
+    "type": "java.lang.Integer",
+    "description": "A description for 'application.config.bcrypt-log-rounds'"
+  },
+  {
+    "name": "application.config.useridentityservice-url",
+    "type": "java.lang.String",
+    "description": "A description for 'application.config.useridentityservice-url'"
   }
 ]}
