@@ -1,0 +1,32 @@
+eureka:
+    instance:
+        preferIpAddress: true
+    client:
+        service-url:
+            defaultZone: http://discovery:8700/eureka
+
+server:
+  port: 8090
+
+spring:
+    application:
+        name: posts
+    data:
+        mongodb:
+            username: mongoroot
+            password: root
+            host: mongodb
+            port: 27017
+            database: postsdb
+            authentication-database: admin
+
+management:
+    tracing:
+        sampling:
+            probability: 1.0
+    zipkin:
+        tracing:
+            endpoint: http://zipkin:9411/api/v2/spans
+    
+            
+         
