@@ -1,0 +1,121 @@
+eureka:
+    instance:
+        preferIpAddress: true
+    client:
+        fetch-registry: true
+        service-url:
+            defaultZone: http://discovery:8700/eureka
+
+server:
+  port: 8080
+
+spring:
+    application:
+        name: gateway
+    cloud:
+        gateway:
+            discovery:
+                locator:
+                    enabled: true
+                    lower-case-service-id: true
+            routes: 
+            - id: authentication
+              uri: lb://authentication
+              predicates:
+              - Path=/authenticate
+              filters:
+              - PrefixPath=/api
+
+            - id: user-creation
+              uri: lb://users
+              predicates:
+              - Path=/user/new
+              filters:
+              - PrefixPath=/api
+
+            - id: user-profile
+              uri: lb://users
+              predicates:
+              - Path=/user/profile/**
+              filters:
+              - PrefixPath=/api
+              - AuthenticationFilter
+
+            - id: user-update
+              uri: lb://users
+              predicates:
+              - Path=/user/update
+              filters:
+              - PrefixPath=/api
+
+            - id: post
+              uri: lb://posts
+              predicates:
+              - Path=/post/**
+              filters:
+              - PrefixPath=/api
+              - AuthenticationFilter
+
+            - id: discovery
+              uri: http://discovery:8700
+              predicates:
+              - Path=/eureka
+              filters:
+              - RewritePath=/eureka,/
+
+            - id: mongo-express
+              uri: http://mongo-express:8081
+              predicates:
+              - Path=/mongo
+              filters:
+              - RewritePath=/mongo,/
+
+            - id: openapi-authentication
+              uri: lb://authentication
+              predicates:
+              - Path=/openapi/authentication/v3/api-docs, /openapi/authentication/v3/api-docs.yaml
+              filters:
+              - StripPrefix=2
+            
+            - id: openapi-posts
+              uri: lb://posts
+              predicates:
+              - Path=/openapi/post/v3/api-docs, /openapi/post/v3/api-docs.yaml
+              filters:
+              - StripPrefix=2
+          
+            - id: openapi-users
+              uri: lb://users
+              predicates:
+              - Path=/openapi/user/v3/api-docs, /openapi/user/v3/api-docs.yaml
+              filters:
+              - StripPrefix=2
+
+application:
+  config:
+    authenticationservice-url: http://authenticationservice:8050/api/authorize
+
+management:
+    tracing:
+        sampling:
+            probability: 1.0
+    zipkin:
+        tracing:
+            endpoint: http://zipkin:9411/api/v2/spans
+    endpoints:
+        web:
+            exposure:
+                include: "health,refresh"
+    health:
+        readinessstate:
+            enabled: true
+        livenessstate:
+            enabled: true
+    endpoint:
+      health:
+          probes:
+              enabled: true
+          show-details: always
+      gateway:
+        enabled: true
+
