@@ -11,3 +11,18 @@ spring:
             server:
                 native:
                     search-locations: classpath:/configurations
+
+management:
+  endpoints:
+    web:
+      exposure:
+        include: "health,refresh"
+  health:
+    readinessstate:
+      enabled: true
+    livenessstate:
+      enabled: true
+  endpoint:
+    health:
+      probes:
+        enabled: true
