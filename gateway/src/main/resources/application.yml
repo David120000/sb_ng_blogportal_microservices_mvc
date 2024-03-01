@@ -1,0 +1,15 @@
+eureka:
+    instance:
+        hostname: localhost
+    client:
+        service-url:
+            defaultZone: http://localhost:8700/eureka
+
+server:
+  port: 8080
+
+spring:
+    application:
+        name: gateway
+    config:
+        import: optional:configserver:http://configserver:8888
