@@ -3,10 +3,20 @@ import { BrowserModule } from '@angular/platform-browser';
 
 import { AppRoutingModule } from './app-routing.module';
 import { AppComponent } from './app.component';
+import { HomeComponent } from './components/home/home.component';
+import { AuthenticationComponent } from './components/authentication/authentication.component';
+import { PostsComponent } from './components/posts/posts.component';
+import { NewpostComponent } from './components/newpost/newpost.component';
+import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 @NgModule({
   declarations: [
-    AppComponent
+    AppComponent,
+    HomeComponent,
+    AuthenticationComponent,
+    PostsComponent,
+    NewpostComponent,
+    PageNotFoundComponent
   ],
   imports: [
     BrowserModule,
