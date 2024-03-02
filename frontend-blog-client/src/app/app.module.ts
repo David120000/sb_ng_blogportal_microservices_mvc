@@ -6,7 +6,7 @@ import { AppComponent } from './app.component';
 import { HomeComponent } from './components/home/home.component';
 import { AuthenticationComponent } from './components/authentication/authentication.component';
 import { PostsComponent } from './components/posts/posts.component';
-import { NewpostComponent } from './components/newpost/newpost.component';
+import { NewPostComponent } from './components/newpost/newpost.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
 
 @NgModule({
@@ -15,7 +15,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
     HomeComponent,
     AuthenticationComponent,
     PostsComponent,
-    NewpostComponent,
+    NewPostComponent,
     PageNotFoundComponent
   ],
   imports: [

@@ -5,6 +5,6 @@ import { Component } from '@angular/core';
   templateUrl: './newpost.component.html',
   styleUrls: ['./newpost.component.css']
 })
-export class NewpostComponent {
+export class NewPostComponent {
 
 }
