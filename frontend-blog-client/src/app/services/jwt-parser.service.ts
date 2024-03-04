@@ -19,4 +19,15 @@ export class JwtParserService {
 
     return subject;
   }
+
+  public isTokenExpired(securityToken: AuthToken): boolean {
+
+    let expired = true;
+    if(securityToken.jwt != undefined) {
+      expired = this.jwtHelperService.isTokenExpired(securityToken.jwt);
+    }
+
+    return expired;
+  }
+  
 }
