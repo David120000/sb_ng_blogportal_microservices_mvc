@@ -11,6 +11,10 @@ import { AuthenticatedUser } from '../models/authenticated-user';
 import { Observable } from 'rxjs';
 import { AuthRequest } from '../models/auth-request';
 import { AuthToken } from '../models/auth-token';
+import { NewPostDTO } from '../models/new-post-dto';
+import { Post } from '../models/post';
+import { PostPages } from '../models/post-pages';
+import { UserProfileDTO } from '../models/user-profile-dto';
 
 @Injectable({
   providedIn: 'root'
@@ -91,12 +95,103 @@ export class AppServiceService {
     return this.authObjectService.getAuthenticationObservable();
   }
 
-  public getPosts() {
+  public getPosts(pageNumber: number, pageSize: number, authorEmail?: string, includeNonPublished?: boolean): CompletionStatusInformation {
 
+    let securityToken = (this.authObjectService.getAuthentication().securityToken) ? this.authObjectService.getAuthentication().securityToken! : new AuthToken();
+    let result = new CompletionStatusInformation();
+
+    let response = 
+      (authorEmail != undefined && includeNonPublished != undefined) ? this.restClient.getPosts(pageNumber, pageSize, securityToken, authorEmail, includeNonPublished) :
+      (authorEmail != undefined && includeNonPublished == undefined) ? this.restClient.getPosts(pageNumber, pageSize, securityToken, authorEmail) :
+      this.restClient.getPosts(pageNumber, pageSize, securityToken);
+
+    response.subscribe({
+      next: (response) => {
+        let postPages = Object.assign(new PostPages(), response);
+        let content = postPages.content;
+
+        if(content != undefined) {
+          for(let i = 0; i < content.length; i++) {
+            this.postsCache.addToPostsCache(content.at(i)!);
+          }
+        }
+        
+        if(postPages.empty === true && postPages.totalElements != undefined) {
+          
+          result.executedSuccessfully = false;
+          if(postPages.totalElements === 0) {
+            result.message = "There are no posts yet.";
+          }
+          else {
+            result.message = "You have reached the end of the posts.";
+          }
+        }
+        else if(postPages.numberOfElements != undefined && postPages.numberOfElements > 0) {
+
+          result.executedSuccessfully = true;
+          result.message = "Posts fetched.";
+        }
+
+      },
+      error: (error) => {
+
+        result.executedSuccessfully = false;
+
+        if(error.status === 401 || error.status === 403) {
+          this.authObjectService.clearAuthentication();
+          result.message = "Your authentication has expired or the token was corrupted. Please log in again.";
+        }
+        else {
+          result.message = error.message;
+        }
+      },
+      complete: () => console.log("Downloading posts completed.")
+    });
+
+    return result;
   }
 
-  public newPost() {
+  public getProfileByEmail(email: string): UserProfileDTO | undefined {
+
+    let authorProfile = this.postsCache.getAuthor(email);
+
+    if(authorProfile === undefined) {
+
+      let securityToken = (this.authObjectService.getAuthentication().securityToken) ? this.authObjectService.getAuthentication().securityToken! : new AuthToken();
+
+      this.restClient.getProfile(email, securityToken)
+        .subscribe(response => {
+            authorProfile = Object.assign(new UserProfileDTO, response);
+            this.postsCache.addToAuthorsCache(authorProfile);
+          });
+
+    }
+
+    return authorProfile;
+  }
+
+  public newPost(newPost: NewPostDTO): CompletionStatusInformation {
+
+    let securityToken = (this.authObjectService.getAuthentication().securityToken) ? this.authObjectService.getAuthentication().securityToken! : new AuthToken();
+    let result = new CompletionStatusInformation();
     
+    this.restClient.newPost(newPost, securityToken)
+      .subscribe({
+        next: (response) => {
+          let persistedPost = Object.assign(new Post(), response);
+          this.postsCache.addFirstToPostsCache(persistedPost);
+          
+          result.executedSuccessfully = true;
+          result.message = "Post saved.";
+        },
+        error: (error) => {
+          result.executedSuccessfully = false;
+          result.message = error.message;
+        },
+        complete: () => console.log("NewPost process completed.")
+      });
+
+    return result;
   }
 
 }
