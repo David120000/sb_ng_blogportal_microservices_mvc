@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ComponentCommunicationService } from './component-communication.service';
+import { AuthenticationObjectService } from './authentication-object.service';
 
 describe('ComponentCommunicationService', () => {
-  let service: ComponentCommunicationService;
+  let service: AuthenticationObjectService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ComponentCommunicationService);
+    service = TestBed.inject(AuthenticationObjectService);
   });
 
   it('should be created', () => {

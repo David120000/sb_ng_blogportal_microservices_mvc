@@ -5,7 +5,7 @@ import { Observable, Subject, Subscription } from 'rxjs';
 @Injectable({
   providedIn: 'root'
 })
-export class ComponentCommunicationService implements OnDestroy {
+export class AuthenticationObjectService implements OnDestroy {
 
   private authenticatedUser: AuthenticatedUser;
   private readonly authObjectSource: Subject<AuthenticatedUser>;
