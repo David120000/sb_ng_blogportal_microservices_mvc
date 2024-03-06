@@ -8,7 +8,7 @@ import { UserRegistrationDTO } from '../models/user-registration-dto';
 import { Roles } from '../models/role-enum';
 import { CompletionStatusInformation } from '../models/completion-status-information';
 import { AuthenticatedUser } from '../models/authenticated-user';
-import { Observable } from 'rxjs';
+import { Observable, Observer, firstValueFrom } from 'rxjs';
 import { AuthRequest } from '../models/auth-request';
 import { AuthToken } from '../models/auth-token';
 import { NewPostDTO } from '../models/new-post-dto';
@@ -29,7 +29,7 @@ export class AppServiceService {
     ) { }
 
 
-  public registerUser(userReg: UserRegistrationDTO): CompletionStatusInformation {
+  public async registerUser(userReg: UserRegistrationDTO): Promise<CompletionStatusInformation> {
     
     let user = new User(
       userReg.email,
@@ -41,50 +41,64 @@ export class AppServiceService {
       userReg.about
     );
 
-    let result = new CompletionStatusInformation();
-
-    this.restClient.register(user)
-      .subscribe({
-        next: (response) => {
-          if(response.status === 201) {
-            result.executedSuccessfully = true;
-            result.message = "Account registered successfully. Now you can log in.";
-          }
-        },
-        error: (error) => {
-          result.executedSuccessfully = false;
-          result.message = error.message;
-        },
-        complete: () => console.log("User registration completed.")
-      });
-
-    return result;
+    return await firstValueFrom(
+      new Observable((observer: Observer<CompletionStatusInformation>) =>
+      
+        this.restClient.register(user)
+          .subscribe({
+            next: (response) => {
+              // the endpoint returns a 201 status with empty body hence the 'response' is null
+              let result = new CompletionStatusInformation();
+              result.executedSuccessfully = true;
+              result.message = "Account registered successfully. Now you can log in.";
+              observer.next(result);
+            },
+            error: (error) => {
+              let result = new CompletionStatusInformation();
+              result.executedSuccessfully = false;
+              result.message = error.message;
+              observer.next(result);
+            },
+            complete: () => console.log("User registration completed.")
+          })
+      )
+    );
   }
 
-  public authenticateUser(authRequset: AuthRequest): CompletionStatusInformation {
+  public async authenticateUser(authRequset: AuthRequest): Promise<CompletionStatusInformation> {
 
-    let result = new CompletionStatusInformation();
+    return await firstValueFrom(
+      new Observable((observer: Observer<CompletionStatusInformation>) =>
 
-    this.restClient.authenticate(authRequset)
-      .subscribe({
-        next: (response) => {
-          let token = Object.assign(new AuthToken(), response);
-          let subjectId = this.jwtParser.getSubjectId(token);
-          let authenticatedUser = new AuthenticatedUser(subjectId, token);
+        this.restClient.authenticate(authRequset)
+          .subscribe({
+            next: (response) => {
+              let token = Object.assign(new AuthToken(), response);
+              let subjectId = this.jwtParser.getSubjectId(token);
+              let authenticatedUser = new AuthenticatedUser(subjectId, token);
 
-          this.authObjectService.setAuthentication(authenticatedUser);
+              this.authObjectService.setAuthentication(authenticatedUser);
+  
+              let completion = new CompletionStatusInformation()
+              completion.executedSuccessfully = true;
+              completion.message = "The credentials are correct. The authentication was successful.";
+              observer.next(completion);
+            },
+            error: (error) => {
+              let completion = new CompletionStatusInformation();
+              completion.executedSuccessfully = false;
+              completion.message = error.message;
+              observer.next(completion);
+            },
+            complete: () => console.log("Authentication completed.")
+          })
 
-          result.executedSuccessfully = true;
-          result.message = "The credentials are correct. The authentication was successful.";
-        },
-        error: (error) => {
-          result.executedSuccessfully = false;
-          result.message = error.message;
-        },
-        complete: () => console.log("Authentication completed.")
-      });
+      )
+    );
+  }
 
-    return result;
+  public clearAuthentication() {
+    this.authObjectService.clearAuthentication();
   }
 
   public getAuthentication(): AuthenticatedUser {
