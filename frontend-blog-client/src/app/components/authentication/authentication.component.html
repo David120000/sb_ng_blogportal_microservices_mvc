@@ -1,1 +1,60 @@
-<p>authentication works!</p>
+<div id="login-main">
+
+    <div *ngIf="getSubjectId() === undefined" class="loginContent">
+        <p class="loginLabelText">{{ getLoginLabelText() }}</p>
+        <form #loginForm="ngForm" (submit)="login(loginForm)" id="loginForm">
+            <input type="email" class="loginField" name="email" placeholder="EMAIL ADDRESS" required ngModel/>
+            <input type="password" class="loginField" name="password" placeholder="PASSWORD" required ngModel/>
+            <button *ngIf="loginForm.value.email?.length > 0" type="submit" id="loginButton">LOG IN</button>
+        </form>
+        <button id="registrationButton" (click)="showRegistrationDialog()">REGISTER</button>
+    </div>
+
+    <div *ngIf="getSubjectId() != undefined" class="loginContent">
+        <p class="loginLabelText">Logged in as: <span style="color: rgb(15, 15, 90); letter-spacing: 0.1rem;">{{ getSubjectId() }}</span>!</p>
+        <button #logoutButton id="logoutButton" (click)="logoutUser()">LOG OUT</button>
+    </div>
+
+</div>
+
+<dialog id="registrationDialog">
+    <div>
+        <h4>Welcome on our page!</h4>
+        <p>Fill the following form to create a new account:</p>
+        <form #registrationForm="ngForm" (submit)="register(registrationForm)" id="registrationForm">
+            <div class="formInputContainer">
+                <div class="formElementWrapper">
+                    <label for="emailInput">Email Address:</label>
+                    <input type="email" class="loginField" name="email" placeholder="EMAIL ADDRESS" id="emailInput" required ngModel autofocus/>
+                </div>
+                <div class="formElementWrapper">
+                    <label for="passwordFirstInput">Password:</label>
+                    <input type="password" class="loginField" name="passwordfirst" placeholder="PASSWORD" id="passwordFirstInput" required ngModel minlength="6"/>
+                </div>
+                <div class="formElementWrapper">
+                    <label for="passwordSecondInput">Password Again:</label>
+                    <input type="password" class="loginField" name="passwordsecond" placeholder="PASSWORD AGAIN" id="passwordSecondInput" required ngModel/>
+                </div>
+                <div class="formElementWrapper">
+                    <label for="firstNameInput">First Name:</label>
+                    <input type="text" class="loginField" name="firstname" placeholder="FIRST NAME" id="firstNameInput" required ngModel/>
+                </div>
+                <div>
+                    <label for="lastNameInput">Last Name:</label>
+                    <input type="text" class="loginField" name="lastname" placeholder="LAST NAME" id="lastNameInput" required ngModel/>
+                </div>
+                <div class="formElementWrapper">
+                    <label for="aboutTextArea">Write something about yourself: (optional)</label>
+                    <textarea name="about" id="aboutTextArea" cols="40" rows="10" placeholder="ABOUT" ngModel></textarea>
+                </div>
+                <div class="formElementWrapper">
+                    <input type="submit"/>
+                </div>
+            </div>
+        </form>
+        <p *ngIf="getRegistrationMessage()">{{ getRegistrationMessage() }}</p>
+        <button id="regFormCloseButton" (click)="closeRegistrationDialog()">CANCEL</button>
+    </div>
+</dialog>
+
+

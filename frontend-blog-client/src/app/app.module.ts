@@ -9,6 +9,7 @@ import { AuthenticationComponent } from './components/authentication/authenticat
 import { PostsComponent } from './components/posts/posts.component';
 import { NewPostComponent } from './components/newpost/newpost.component';
 import { PageNotFoundComponent } from './components/page-not-found/page-not-found.component';
+import { FormsModule } from '@angular/forms';
 
 @NgModule({
   declarations: [
@@ -22,6 +23,7 @@ import { PageNotFoundComponent } from './components/page-not-found/page-not-foun
   imports: [
     BrowserModule,
     HttpClientModule,
+    FormsModule,
     AppRoutingModule
   ],
   providers: [],
