@@ -7,7 +7,11 @@ import { AuthToken } from '../models/auth-token';
 })
 export class JwtParserService {
 
-  constructor(private jwtHelperService: JwtHelperService) { }
+  private jwtHelperService: JwtHelperService;
+
+  constructor() {
+    this.jwtHelperService = new JwtHelperService();
+   }
 
 
   public getSubjectId(securityToken: AuthToken): string | undefined {
