@@ -1,1 +1,20 @@
-<p>posts works!</p>
+<div id="posts-main">
+    <div *ngIf="isUserAuthenticated(); else notAuthenticated">
+        <ul id="posts-list">
+            <li *ngFor="let post of getPosts()">
+                <div class="post-element">
+                    <div class="post-element-content">{{ post.content }}</div>
+                    <div class="post-element-author">
+                        <span class="post-element-createdat">{{ post.createdAt }} </span>
+                        <span class="post-element-byauthor">by {{ (getAuthorProfile(post.authorEmail!).name === undefined) ? post.authorEmail : getAuthorProfile(post.authorEmail!).name }}</span>
+                    </div>
+                </div>
+            </li>
+        </ul>
+        <button id="load-posts-button" (click)="loadMorePosts()" [disabled]="isLoadButtonDisabled()">LOAD MORE POSTS</button>
+    </div>
+    <ng-template #notAuthenticated>
+        <p>Posts are only accessible for authenticated users.</p>
+    </ng-template>
+    <p id="posts-message">{{ getMessage() }}</p>
+</div>
