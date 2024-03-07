@@ -21,12 +21,16 @@ import { UserProfileDTO } from '../models/user-profile-dto';
 })
 export class AppServiceService {
 
+  private userProfileFetchSemafor: Array<string>
+
   constructor(
     private restClient: RestClientService, 
     private jwtParser: JwtParserService, 
     private authObjectService: AuthenticationObjectService, 
     private postsCache: PostsCacheService
-    ) { }
+    ) { 
+      this.userProfileFetchSemafor = new Array<string>;
+    }
 
 
   public async registerUser(userReg: UserRegistrationDTO): Promise<CompletionStatusInformation> {
@@ -109,76 +113,81 @@ export class AppServiceService {
     return this.authObjectService.getAuthenticationObservable();
   }
 
-  public getPosts(pageNumber: number, pageSize: number, authorEmail?: string, includeNonPublished?: boolean): CompletionStatusInformation {
+  public async fetchPosts(pageNumber: number, pageSize: number, authorEmail?: string, includeNonPublished?: boolean): Promise<CompletionStatusInformation> {
+    
+    let securityToken = this.getSecurityToken();
 
-    let securityToken = (this.authObjectService.getAuthentication().securityToken) ? this.authObjectService.getAuthentication().securityToken! : new AuthToken();
-    let result = new CompletionStatusInformation();
-
-    let response = 
-      (authorEmail != undefined && includeNonPublished != undefined) ? this.restClient.getPosts(pageNumber, pageSize, securityToken, authorEmail, includeNonPublished) :
-      (authorEmail != undefined && includeNonPublished == undefined) ? this.restClient.getPosts(pageNumber, pageSize, securityToken, authorEmail) :
-      this.restClient.getPosts(pageNumber, pageSize, securityToken);
-
-    response.subscribe({
-      next: (response) => {
-        let postPages = Object.assign(new PostPages(), response);
-        let content = postPages.content;
-
-        if(content != undefined) {
-          for(let i = 0; i < content.length; i++) {
-            this.postsCache.addToPostsCache(content.at(i)!);
-          }
-        }
+    return await firstValueFrom(
+      new Observable((observer: Observer<CompletionStatusInformation>) => {
         
-        if(postPages.empty === true && postPages.totalElements != undefined) {
-          
-          result.executedSuccessfully = false;
-          if(postPages.totalElements === 0) {
-            result.message = "There are no posts yet.";
-          }
-          else {
-            result.message = "You have reached the end of the posts.";
-          }
-        }
-        else if(postPages.numberOfElements != undefined && postPages.numberOfElements > 0) {
+        let response = 
+        (authorEmail != undefined && includeNonPublished != undefined) ? this.restClient.getPosts(pageNumber, pageSize, securityToken, authorEmail, includeNonPublished) :
+        (authorEmail != undefined && includeNonPublished == undefined) ? this.restClient.getPosts(pageNumber, pageSize, securityToken, authorEmail) :
+        this.restClient.getPosts(pageNumber, pageSize, securityToken);
 
-          result.executedSuccessfully = true;
-          result.message = "Posts fetched.";
-        }
+        response.subscribe({
+          next: (response) => {
+            let postPages = Object.assign(new PostPages(), response);
+            let content = postPages.content;
 
-      },
-      error: (error) => {
+            if(content != undefined) {
+              for(let i = 0; i < content.length; i++) {
+                this.postsCache.addToPostsCache(content.at(i)!);
+              }
+            }
+            
+            let result = new CompletionStatusInformation();
 
-        result.executedSuccessfully = false;
+            if(postPages.empty === true && postPages.totalElements != undefined) {
+              
+              result.executedSuccessfully = false;
+              if(postPages.totalElements === 0) {
+                result.message = "There are no posts yet.";
+              }
+              else {
+                result.message = "You have reached the end of the posts.";
+              }
+            }
+            else if(postPages.numberOfElements != undefined && postPages.numberOfElements > 0) {
 
-        if(error.status === 401 || error.status === 403) {
-          this.authObjectService.clearAuthentication();
-          result.message = "Your authentication has expired or the token was corrupted. Please log in again.";
-        }
-        else {
-          result.message = error.message;
-        }
-      },
-      complete: () => console.log("Downloading posts completed.")
-    });
+              result.executedSuccessfully = true;
+              result.message = "Posts fetched.";
+            }
+            
+            observer.next(result);
+          },
+          error: (error) => {
 
-    return result;
+            let result = new CompletionStatusInformation();
+            result.executedSuccessfully = false;
+
+            if(error.status === 401 || error.status === 403) {
+              this.authObjectService.clearAuthentication();
+              result.message = "Your authentication has expired or the token was corrupted. Please log in again.";
+            }
+            else {
+              result.message = error.message;
+            }
+
+            observer.next(result);
+          },
+          complete: () => console.log("Downloading posts completed.")
+        });
+      })
+    );
   }
 
-  public getProfileByEmail(email: string): UserProfileDTO | undefined {
+  public getPosts(): Array<Post> {
+    return this.postsCache.getPosts();
+  }
+
+  public getProfileByEmail(email: string): UserProfileDTO {
 
     let authorProfile = this.postsCache.getAuthor(email);
 
     if(authorProfile === undefined) {
-
-      let securityToken = (this.authObjectService.getAuthentication().securityToken) ? this.authObjectService.getAuthentication().securityToken! : new AuthToken();
-
-      this.restClient.getProfile(email, securityToken)
-        .subscribe(response => {
-            authorProfile = Object.assign(new UserProfileDTO, response);
-            this.postsCache.addToAuthorsCache(authorProfile);
-          });
-
+      authorProfile = new UserProfileDTO();
+      this.fetchProfileByEmail(email);
     }
 
     return authorProfile;
@@ -186,7 +195,7 @@ export class AppServiceService {
 
   public newPost(newPost: NewPostDTO): CompletionStatusInformation {
 
-    let securityToken = (this.authObjectService.getAuthentication().securityToken) ? this.authObjectService.getAuthentication().securityToken! : new AuthToken();
+    let securityToken = this.getSecurityToken();
     let result = new CompletionStatusInformation();
     
     this.restClient.newPost(newPost, securityToken)
@@ -206,6 +215,26 @@ export class AppServiceService {
       });
 
     return result;
+  }
+
+  private fetchProfileByEmail(email: string) {
+
+    if(!this.userProfileFetchSemafor.includes(email)) {
+      
+      this.userProfileFetchSemafor.push(email);
+
+      let securityToken = this.getSecurityToken();
+
+      this.restClient.getProfile(email, securityToken)
+        .subscribe(response => {
+          let authorProfile = Object.assign(new UserProfileDTO, response);
+          this.postsCache.addToAuthorsCache(authorProfile);
+        });
+    }
+  }
+
+  private getSecurityToken(): AuthToken {
+    return (this.authObjectService.getAuthentication().securityToken) ? this.authObjectService.getAuthentication().securityToken! : new AuthToken();
   }
 
 }
