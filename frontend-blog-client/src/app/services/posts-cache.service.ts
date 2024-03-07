@@ -8,30 +8,28 @@ import { Post } from '../models/post';
 export class PostsCacheService {
 
   private posts: Array<Post>;
+  private postsMap: Map<string, Post>;
   private authors: Map<string, UserProfileDTO>;
 
   constructor() {
     this.posts = new Array<Post>();
+    this.postsMap = new Map<string, Post>();
     this.authors = new Map<string, UserProfileDTO>();
   }
 
 
   public addToPostsCache(post: Post) {
     
-    if(!this.posts.includes(post)) {
+    if(post.id !== undefined && !this.postsMap.has(post.id)) {
+      this.postsMap.set(post.id, post);
       this.posts.push(post);
     }
   }
 
   public addFirstToPostsCache(post: Post) {
     
-    if(this.posts.length > 0) {
-      // for better performance, addFirst only checks the current first element and not the whole array with includes()
-      if(this.posts.at(0)?.id != post.id) {
-        this.posts.unshift(post);
-      }
-    }
-    else {
+    if(post.id !== undefined && !this.postsMap.has(post.id)) {
+      this.postsMap.set(post.id, post);
       this.posts.unshift(post);
     } 
   }
