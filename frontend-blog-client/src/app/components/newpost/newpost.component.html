@@ -1,1 +1,21 @@
-<p>newpost works!</p>
+<div id="newpost-main">
+    <div *ngIf="isUserAuthenticated(); else notAuthenticated" id="form-wrapper">
+        <form #postForm="ngForm" (submit)="newPost(postForm)" id="postForm">
+            
+            <textarea name="content" id="post-content" cols="80" rows="20" placeholder="My thoughts are..." required ngModel></textarea>
+            
+            <fieldset>
+                <legend>Should this post be visible to the public?</legend>
+                <p>You can change this setting later.</p>
+                <input type="checkbox" name="published" [(ngModel)]="checkedDefault"/>
+                <label for="publish-checkbox">Publish this post</label>
+            </fieldset>
+
+            <button type="submit" id="loginButton" [disabled]="isSubmitButtonDisabled() || postForm.value.content?.length === 0">SAVE</button>
+        </form>
+    </div>
+    <ng-template #notAuthenticated>
+        <p>Please log in and then you can create a post immediately!</p>
+    </ng-template>
+    <p id="newpost-message">{{ getMessage() }}</p>
+</div>
