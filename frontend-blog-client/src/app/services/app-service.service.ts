@@ -193,28 +193,34 @@ export class AppServiceService {
     return authorProfile;
   }
 
-  public newPost(newPost: NewPostDTO): CompletionStatusInformation {
+  public async newPost(newPost: NewPostDTO): Promise<CompletionStatusInformation> {
 
     let securityToken = this.getSecurityToken();
-    let result = new CompletionStatusInformation();
-    
-    this.restClient.newPost(newPost, securityToken)
-      .subscribe({
-        next: (response) => {
-          let persistedPost = Object.assign(new Post(), response);
-          this.postsCache.addFirstToPostsCache(persistedPost);
-          
-          result.executedSuccessfully = true;
-          result.message = "Post saved.";
-        },
-        error: (error) => {
-          result.executedSuccessfully = false;
-          result.message = error.message;
-        },
-        complete: () => console.log("NewPost process completed.")
-      });
 
-    return result;
+    return await firstValueFrom(
+      new Observable((observer: Observer<CompletionStatusInformation>) =>
+        
+        this.restClient.newPost(newPost, securityToken)
+          .subscribe({
+            next: (response) => {
+              let persistedPost = Object.assign(new Post(), response);
+              this.postsCache.addFirstToPostsCache(persistedPost);
+              
+              let result = new CompletionStatusInformation();
+              result.executedSuccessfully = true;
+              result.message = "Post saved.";
+              observer.next(result);
+            },
+            error: (error) => {
+              let result = new CompletionStatusInformation();
+              result.executedSuccessfully = false;
+              result.message = error.message;
+              observer.next(result);
+            },
+            complete: () => console.log("NewPost process completed.")
+          })
+      )
+    );
   }
 
   private fetchProfileByEmail(email: string) {
