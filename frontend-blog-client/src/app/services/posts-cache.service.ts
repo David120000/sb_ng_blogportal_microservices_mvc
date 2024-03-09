@@ -38,6 +38,10 @@ export class PostsCacheService {
     return this.posts;
   }
 
+  public clearPostsCache() {
+    this.posts = new Array<Post>();
+    this.postsMap = new Map<string, Post>();    
+  }
 
   public addToAuthorsCache(profile: UserProfileDTO) {
     

@@ -181,6 +181,10 @@ export class AppServiceService {
     return this.postsCache.getPosts();
   }
 
+  public clearPostsCache() {
+    this.postsCache.clearPostsCache();
+  }
+
   public getProfileByEmail(email: string): UserProfileDTO {
 
     let authorProfile = this.postsCache.getAuthor(email);
