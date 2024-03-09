@@ -68,11 +68,11 @@ export class RestClientService {
       .set("pageSize", pageSize);
 
     if(authorEmail && authorEmail.length > 0) {
-      params.set("authorEmail", authorEmail);
+      params = params.set("authorEmail", authorEmail);
     }
 
     if(includeNonPublished) {
-      params.set("includeNonPublished", includeNonPublished);
+      params = params.set("includeNonPublished", includeNonPublished);
     }
 
     let response = this.http.get<PostPages>(
