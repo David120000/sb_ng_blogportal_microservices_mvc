@@ -1,0 +1,54 @@
+#login-main {
+    min-height: 80px;
+}
+
+.main-label-text {
+    font-weight: 600;
+    margin-top: 10px;
+    margin-bottom: 6px;
+}
+
+#login-form input {
+    width: 200px;
+    margin-right: 5px;
+    margin-bottom: 8px;
+    padding: 3px 6px;
+    border-style: solid;
+    border-radius: 3px;
+}
+
+#login-form input:focus {
+    outline-color: orangered;
+}
+
+#login-form button {
+    background-color: steelblue;
+    color: white;
+    text-shadow: 0 0 2px black;
+    padding: 3px 6px;
+    border-style: solid;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+.attention-buttons {
+    width: 216px;
+    font-size: x-small;
+    background-color: steelblue;
+    color: white;
+    text-shadow: 0 0 2px black;
+    padding: 3px 6px;
+    border-style: solid;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+@media (hover: hover) {
+    #login-form button:hover {
+        background-color: orangered;
+    }
+
+    .attention-buttons:hover {
+        background-color: orangered;
+    }
+}

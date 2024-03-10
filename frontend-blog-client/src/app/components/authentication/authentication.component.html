@@ -1,23 +1,28 @@
 <div id="login-main">
 
-    <div *ngIf="getSubjectId() === undefined" class="loginContent">
-        <p class="loginLabelText">{{ getLoginLabelText() }}</p>
-        <form #loginForm="ngForm" (submit)="login(loginForm)" id="loginForm">
-            <input type="email" class="loginField" name="email" placeholder="EMAIL ADDRESS" required ngModel/>
-            <input type="password" class="loginField" name="password" placeholder="PASSWORD" required ngModel/>
-            <button *ngIf="loginForm.value.email?.length > 0" type="submit" id="loginButton">LOG IN</button>
+    <div *ngIf="getSubjectId() === undefined" class="login-content">
+        <p class="main-label-text">{{ getLoginLabelText() }}</p>
+        <form #loginForm="ngForm" (submit)="login(loginForm)" id="login-form">
+            <input type="email" class="login-field" name="email" placeholder="EMAIL ADDRESS" required ngModel/>
+            <input *ngIf="loginForm.value.email?.length > 0" type="password" class="login-field" name="password" placeholder="PASSWORD" required ngModel/>
+            <button *ngIf="loginForm.value.password?.length > 0" type="submit" id="login-button">
+                LOG IN
+            </button>
+            <br/>
+            <button id="registration-button" class="attention-buttons" (click)="showRegistrationDialog(loginForm.value.email); $event.preventDefault()">
+                REGISTER NEW ACCOUNT
+            </button>
         </form>
-        <button id="registrationButton" (click)="showRegistrationDialog()">REGISTER</button>
     </div>
 
-    <div *ngIf="getSubjectId() != undefined" class="loginContent">
-        <p class="loginLabelText">Logged in as: <span style="color: rgb(15, 15, 90); letter-spacing: 0.1rem;">{{ getSubjectId() }}</span>!</p>
-        <button #logoutButton id="logoutButton" (click)="logoutUser()">LOG OUT</button>
+    <div *ngIf="getSubjectId() != undefined" class="login-content">
+        <p class="main-label-text">LOGGED IN AS: <span style="color: rgb(15, 15, 90); letter-spacing: 0.1rem; font-weight: 500;">{{ getSubjectId() }}</span>!</p>
+        <button id="logout-button" class="attention-buttons" (click)="logoutUser()">LOG OUT</button>
     </div>
 
 </div>
 
-<dialog id="registrationDialog">
+<dialog id="registration-dialog">
     <div>
         <h4>Welcome on our page!</h4>
         <p>Fill the following form to create a new account:</p>
@@ -25,7 +30,7 @@
             <div class="formInputContainer">
                 <div class="formElementWrapper">
                     <label for="emailInput">Email Address:</label>
-                    <input type="email" class="loginField" name="email" placeholder="EMAIL ADDRESS" id="emailInput" required ngModel autofocus/>
+                    <input type="email" class="loginField" name="email" placeholder="EMAIL ADDRESS" id="emailInput" [value]="getEmailToRegister()" required ngModel autofocus/>
                 </div>
                 <div class="formElementWrapper">
                     <label for="passwordFirstInput">Password:</label>

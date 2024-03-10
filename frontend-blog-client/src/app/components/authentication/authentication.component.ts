@@ -16,14 +16,15 @@ export class AuthenticationComponent implements OnInit, OnDestroy {
   private authenticatedUser: AuthenticatedUser;
   private authenticationSubscription: Subscription | undefined;
 
-  private defaultLoginLabelText: string;
+  private readonly defaultLoginLabelText: string;
   private loginLabelText: string;
+  private emailToRegister: string | undefined;
   private registrationMessage: string | undefined;
 
 
   constructor(private service: AppServiceService, private elementRef: ElementRef) {
     this.authenticatedUser = this.service.getAuthentication();
-    this.defaultLoginLabelText = "To access blog posts or write yours, please log in:";
+    this.defaultLoginLabelText = "TO ACCESS BLOG POSTS OR WRITE YOURS, PLEASE LOG IN:";
     this.loginLabelText = this.defaultLoginLabelText;
    }
 
@@ -63,12 +64,18 @@ export class AuthenticationComponent implements OnInit, OnDestroy {
     this.service.clearAuthentication();
   }
 
-  public showRegistrationDialog() {
+  public getEmailToRegister(): string | undefined {
+    return this.emailToRegister;
+  }
+
+  public showRegistrationDialog(emailToRegister: string | undefined) {
+    this.emailToRegister = emailToRegister;
     this.elementRef.nativeElement.querySelector('#registrationDialog')
       .showModal();
   }
 
   public closeRegistrationDialog() {
+    this.emailToRegister = undefined;
     this.elementRef.nativeElement.querySelector('#registrationDialog')
       .close();
   }
