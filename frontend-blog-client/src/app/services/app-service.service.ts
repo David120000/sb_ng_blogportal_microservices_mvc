@@ -121,16 +121,16 @@ export class AppServiceService {
       new Observable((observer: Observer<CompletionStatusInformation>) => {
         
         let response = 
-        (authorEmail != undefined && includeNonPublished != undefined) ? this.restClient.getPosts(pageNumber, pageSize, securityToken, authorEmail, includeNonPublished) :
-        (authorEmail != undefined && includeNonPublished == undefined) ? this.restClient.getPosts(pageNumber, pageSize, securityToken, authorEmail) :
-        this.restClient.getPosts(pageNumber, pageSize, securityToken);
+          (authorEmail !== undefined && includeNonPublished !== undefined) ? this.restClient.getPosts(pageNumber, pageSize, securityToken, authorEmail, includeNonPublished) :
+            (authorEmail !== undefined && includeNonPublished === undefined) ? this.restClient.getPosts(pageNumber, pageSize, securityToken, authorEmail) :
+              this.restClient.getPosts(pageNumber, pageSize, securityToken);
 
         response.subscribe({
           next: (response) => {
             let postPages = Object.assign(new PostPages(), response);
             let content = postPages.content;
 
-            if(content != undefined) {
+            if(content !== undefined) {
               for(let i = 0; i < content.length; i++) {
                 this.postsCache.addToPostsCache(content.at(i)!);
               }
@@ -138,7 +138,7 @@ export class AppServiceService {
             
             let result = new CompletionStatusInformation();
 
-            if(postPages.empty === true && postPages.totalElements != undefined) {
+            if(postPages.empty === true && postPages.totalElements !== undefined) {
               
               result.executedSuccessfully = false;
               if(postPages.totalElements === 0) {
@@ -148,7 +148,7 @@ export class AppServiceService {
                 result.message = "You have reached the end of the posts.";
               }
             }
-            else if(postPages.numberOfElements != undefined && postPages.numberOfElements > 0) {
+            else if(postPages.numberOfElements !== undefined && postPages.numberOfElements > 0) {
 
               result.executedSuccessfully = true;
               result.message = "Posts fetched.";
