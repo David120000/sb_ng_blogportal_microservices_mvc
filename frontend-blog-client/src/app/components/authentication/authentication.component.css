@@ -6,6 +6,11 @@
     font-weight: 600;
     margin-top: 10px;
     margin-bottom: 6px;
+    transition: color 0.5s;
+}
+
+.error-text {
+    color: red;
 }
 
 .login-field {
@@ -84,6 +89,8 @@
 
 #registration-dialog-message {
     margin-bottom: 20px;
+    max-width: 285px;
+    font-weight: 500;
 }
 
 @media (hover: hover) {

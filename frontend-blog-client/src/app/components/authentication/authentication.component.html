@@ -1,13 +1,13 @@
 <div id="login-main">
 
     <div *ngIf="getSubjectId() === undefined" class="login-content">
-        <p class="main-label-text">
+        <p class="main-label-text" [class.error-text]="loginRequestErrorHappened()">
             {{ getLoginLabelText() }}
         </p>
         <form #loginForm="ngForm" (submit)="login(loginForm)" id="login-form">
             <input type="email" class="login-field" name="email" placeholder="EMAIL ADDRESS" required ngModel/>
             <input *ngIf="loginForm.value.email?.length > 0" type="password" class="login-field" name="password" placeholder="PASSWORD" required ngModel/>
-            <button *ngIf="loginForm.value.password?.length > 0" type="submit" id="login-button">
+            <button *ngIf="loginForm.value.password?.length > 0" type="submit" id="login-button" [disabled]="isLoginButtonDisabled()">
                 LOG IN
             </button>
             <br/>
@@ -39,7 +39,7 @@
         </div>
         <h4>Welcome on our page!</h4>
         <p>Fill the following form to create a new account:</p>
-        <form #registrationForm="ngForm" (submit)="register(registrationForm)" id="registration-form">
+        <form #registrationForm="ngForm" (submit)="register(registrationForm)" id="registration-form" ngNativeValidate>
             <div class="form-input-container">
                 <div class="form-element-wrapper">
                     <label for="email-input">Email Address:</label>
@@ -66,11 +66,13 @@
                     <textarea name="about" id="about-textarea" cols="25" rows="10" placeholder="ABOUT" ngModel></textarea>
                 </div>
                 <div class="form-element-wrapper">
-                    <input type="submit" class="attention-buttons" value="SUBMIT"/>
+                    <input type="submit" class="attention-buttons" value="SUBMIT" [disabled]="isRegistrationButtonDisabled()"/>
                 </div>
             </div>
         </form>
-        <p *ngIf="getRegistrationMessage()" id="registration-dialog-message">{{ getRegistrationMessage() }}</p>
+        <p id="registration-dialog-message" [class.error-text]="registrationRequestErrorHappened()" style="white-space: pre-line">
+            {{ getRegistrationMessage() }}
+        </p>
     </div>
 </dialog>
 

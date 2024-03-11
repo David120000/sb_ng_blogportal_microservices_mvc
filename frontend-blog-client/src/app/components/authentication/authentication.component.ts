@@ -19,13 +19,24 @@ export class AuthenticationComponent implements OnInit, OnDestroy {
   private readonly defaultLoginLabelText: string;
   private loginLabelText: string;
   private emailToRegister: string | undefined;
-  private registrationMessage: string | undefined;
+  private registrationMessage: string;
+  private loginRequestError: boolean;
+  private registrationRequestError: boolean;
+  private loginButtonDisabled: boolean;
+  private registrationButtonDisabled: boolean;
+
+  private timeOutId: ReturnType<typeof setTimeout> | undefined;
 
 
   constructor(private service: AppServiceService, private elementRef: ElementRef) {
     this.authenticatedUser = this.service.getAuthentication();
     this.defaultLoginLabelText = "TO ACCESS BLOG POSTS OR WRITE YOURS, PLEASE LOG IN:";
     this.loginLabelText = this.defaultLoginLabelText;
+    this.registrationMessage = '';
+    this.loginRequestError = false;
+    this.registrationRequestError = false;
+    this.loginButtonDisabled = false;
+    this.registrationButtonDisabled = false;
    }
 
   
@@ -40,28 +51,92 @@ export class AuthenticationComponent implements OnInit, OnDestroy {
   }
   
 
-  public getSubjectId(): string | undefined {
-    return this.authenticatedUser.subjectId;
-  }
-
-  public getLoginLabelText(): string {
-    return this.loginLabelText;
-  }
-
   public async login(form: NgForm) {
     
+    this.loginButtonDisabled = true;
+    clearTimeout(this.timeOutId);
+
     let authRequest = new AuthRequest(form.value.email, form.value.password);
-    
     let response = await this.service.authenticateUser(authRequest);
-     
+    
+    this.loginButtonDisabled = false;
+
     if(response.executedSuccessfully === false) {
+
       this.loginLabelText = response.message;
+      this.loginRequestError = true;
+      
+      this.timeOutId = setTimeout(() => {
+          this.loginLabelText = this.defaultLoginLabelText;
+          this.loginRequestError = false;
+        }, 
+        5000
+      );
     }
   }
 
   public logoutUser() {
     this.loginLabelText = this.defaultLoginLabelText;
     this.service.clearAuthentication();
+  }
+
+  public async register(form: NgForm) {
+
+    this.registrationButtonDisabled = true;
+    clearTimeout(this.timeOutId);
+
+    if(form.value.passwordfirst === form.value.passwordsecond) {
+
+      let registrationRequest = 
+        new UserRegistrationDTO(
+          form.value.email,
+          form.value.passwordfirst,
+          form.value.firstname,
+          form.value.lastname,
+          (form.value.about) ? form.value.about : ''
+        );
+
+      let response = await this.service.registerUser(registrationRequest);
+      this.registrationMessage = response.message;
+      this.registrationButtonDisabled = false;
+
+      if(response.executedSuccessfully) {
+        this.timeOutId = setTimeout(() => {
+            this.closeRegistrationDialog();
+          }, 
+          3000  
+        );
+      }
+      else {
+        this.registrationRequestError = true;
+
+        this.timeOutId = setTimeout(() => {
+            this.registrationMessage = '';
+            this.registrationRequestError = false;
+          }, 
+          8000
+        );
+      }
+    }
+    else {
+      this.registrationMessage = "The re-entered password does not match. \nPlease ensure you enter the same password in the two fields.";
+      this.registrationRequestError = true;
+
+        this.timeOutId = setTimeout(() => {
+            this.registrationMessage = '';
+            this.registrationRequestError = false;
+          }, 
+          8000
+        );
+    }
+  }
+
+  public getSubjectId(): string | undefined {
+    return this.authenticatedUser.subjectId;
+  }
+
+  public getLoginLabelText(): string {
+    return this.loginLabelText;
   }
 
   public getEmailToRegister(): string | undefined {
@@ -80,37 +155,24 @@ export class AuthenticationComponent implements OnInit, OnDestroy {
       .close();
   }
 
-  public getRegistrationMessage(): string | undefined {
+  public getRegistrationMessage(): string {
     return this.registrationMessage;
   }
 
-  public async register(form: NgForm) {
-
-    if(form.value.passwordfirst === form.value.passwordsecond) {
-
-      let registrationRequest = 
-        new UserRegistrationDTO(
-          form.value.email,
-          form.value.passwordfirst,
-          form.value.firstname,
-          form.value.lastname,
-          (form.value.about) ? form.value.about : ''
-        );
-
-      let response = await this.service.registerUser(registrationRequest);
-      this.registrationMessage = response.message;
-
-      if(response.executedSuccessfully) {
-        // html element formatting
-      }
-      else {
-        // html element formatting
-      }
-    }
-    else {
-      this.registrationMessage = "The re-entered password does not match. Please ensure you enter the same password in the two fields.";
-    }
+  public loginRequestErrorHappened(): boolean {
+    return this.loginRequestError;
   }
 
+  public registrationRequestErrorHappened(): boolean {
+    return this.registrationRequestError;
+  }
+
+  public isLoginButtonDisabled(): boolean {
+    return this.loginButtonDisabled;
+  }
+
+  public isRegistrationButtonDisabled(): boolean {
+    return this.registrationButtonDisabled;
+  }
 
 }
