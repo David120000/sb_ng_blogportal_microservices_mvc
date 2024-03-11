@@ -70,13 +70,13 @@ export class AuthenticationComponent implements OnInit, OnDestroy {
 
   public showRegistrationDialog(emailToRegister: string | undefined) {
     this.emailToRegister = emailToRegister;
-    this.elementRef.nativeElement.querySelector('#registrationDialog')
+    this.elementRef.nativeElement.querySelector('#registration-dialog')
       .showModal();
   }
 
   public closeRegistrationDialog() {
     this.emailToRegister = undefined;
-    this.elementRef.nativeElement.querySelector('#registrationDialog')
+    this.elementRef.nativeElement.querySelector('#registration-dialog')
       .close();
   }
 

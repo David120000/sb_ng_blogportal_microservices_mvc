@@ -8,7 +8,7 @@
     margin-bottom: 6px;
 }
 
-#login-form input {
+.login-field {
     width: 200px;
     margin-right: 5px;
     margin-bottom: 8px;
@@ -17,7 +17,7 @@
     border-radius: 3px;
 }
 
-#login-form input:focus {
+.login-field:focus {
     outline-color: orangered;
 }
 
@@ -43,6 +43,49 @@
     cursor: pointer;
 }
 
+#registration-dialog {
+    padding: 5px 15px 30px 20px;
+    border-radius: 10px;
+}
+
+#registration-dialog h4 {
+    margin-top: 0;
+}
+
+#dialog-button-container {
+    display: flex;
+    flex-direction: row-reverse;
+}
+
+.form-element-wrapper {
+    display: flex;
+    flex-direction: column;
+}
+
+.form-element-wrapper label {
+    font-weight: 500;
+}
+
+#about-textarea {
+    width: 200px;
+    height: 15px;
+    margin-bottom: 8px;
+    padding: 3px 6px;
+    border-style: solid;
+    border-width: 2px;
+    border-radius: 3px;
+    transition: height 0.3s;
+}
+
+#about-textarea:focus {
+    height: 150px;
+    outline-color: orangered;
+}
+
+#registration-dialog-message {
+    margin-bottom: 20px;
+}
+
 @media (hover: hover) {
     #login-form button:hover {
         background-color: orangered;
@@ -50,5 +93,13 @@
 
     .attention-buttons:hover {
         background-color: orangered;
+    }
+
+    #dialog-button-container svg:hover {
+        /* filter: drop-shadow(0 0 0.25rem rgba(15, 6, 129, 0.5)); */
+
+        circle, path {
+            stroke: orangered;
+        }
     }
 }

@@ -1,7 +1,9 @@
 <div id="login-main">
 
     <div *ngIf="getSubjectId() === undefined" class="login-content">
-        <p class="main-label-text">{{ getLoginLabelText() }}</p>
+        <p class="main-label-text">
+            {{ getLoginLabelText() }}
+        </p>
         <form #loginForm="ngForm" (submit)="login(loginForm)" id="login-form">
             <input type="email" class="login-field" name="email" placeholder="EMAIL ADDRESS" required ngModel/>
             <input *ngIf="loginForm.value.email?.length > 0" type="password" class="login-field" name="password" placeholder="PASSWORD" required ngModel/>
@@ -16,49 +18,59 @@
     </div>
 
     <div *ngIf="getSubjectId() != undefined" class="login-content">
-        <p class="main-label-text">LOGGED IN AS: <span style="color: rgb(15, 15, 90); letter-spacing: 0.1rem; font-weight: 500;">{{ getSubjectId() }}</span>!</p>
-        <button id="logout-button" class="attention-buttons" (click)="logoutUser()">LOG OUT</button>
+        <p class="main-label-text">
+            LOGGED IN AS: 
+            <span style="color: rgb(15, 15, 90); letter-spacing: 0.1rem; font-weight: 500;">{{ getSubjectId() }}</span>!
+        </p>
+        <button id="logout-button" class="attention-buttons" (click)="logoutUser()">
+            LOG OUT
+        </button>
     </div>
 
 </div>
 
 <dialog id="registration-dialog">
     <div>
+        <div id="dialog-button-container" (click)="closeRegistrationDialog()">
+            <svg width="25px" height="25px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <circle cx="12" cy="12" r="10" stroke="#1C274C" stroke-width="1.5"/>
+                <path d="M14.5 9.50002L9.5 14.5M9.49998 9.5L14.5 14.5" stroke="#1C274C" stroke-width="1.5" stroke-linecap="round"/>
+            </svg>
+        </div>
         <h4>Welcome on our page!</h4>
         <p>Fill the following form to create a new account:</p>
-        <form #registrationForm="ngForm" (submit)="register(registrationForm)" id="registrationForm">
-            <div class="formInputContainer">
-                <div class="formElementWrapper">
-                    <label for="emailInput">Email Address:</label>
-                    <input type="email" class="loginField" name="email" placeholder="EMAIL ADDRESS" id="emailInput" [value]="getEmailToRegister()" required ngModel autofocus/>
+        <form #registrationForm="ngForm" (submit)="register(registrationForm)" id="registration-form">
+            <div class="form-input-container">
+                <div class="form-element-wrapper">
+                    <label for="email-input">Email Address:</label>
+                    <input type="email" class="login-field" name="email" placeholder="EMAIL ADDRESS" id="email-input" [value]="getEmailToRegister()" required ngModel autofocus/>
                 </div>
-                <div class="formElementWrapper">
-                    <label for="passwordFirstInput">Password:</label>
-                    <input type="password" class="loginField" name="passwordfirst" placeholder="PASSWORD" id="passwordFirstInput" required ngModel minlength="6"/>
+                <div class="form-element-wrapper">
+                    <label for="password-first-input">Password:</label>
+                    <input type="password" class="login-field" name="passwordfirst" placeholder="PASSWORD" id="password-first-input" required ngModel minlength="6"/>
                 </div>
-                <div class="formElementWrapper">
-                    <label for="passwordSecondInput">Password Again:</label>
-                    <input type="password" class="loginField" name="passwordsecond" placeholder="PASSWORD AGAIN" id="passwordSecondInput" required ngModel/>
+                <div class="form-element-wrapper">
+                    <label for="password-second-input">Password Again:</label>
+                    <input type="password" class="login-field" name="passwordsecond" placeholder="PASSWORD AGAIN" id="password-second-input" required ngModel/>
                 </div>
-                <div class="formElementWrapper">
-                    <label for="firstNameInput">First Name:</label>
-                    <input type="text" class="loginField" name="firstname" placeholder="FIRST NAME" id="firstNameInput" required ngModel/>
+                <div class="form-element-wrapper">
+                    <label for="first-name-input">First Name:</label>
+                    <input type="text" class="login-field" name="firstname" placeholder="FIRST NAME" id="first-name-input" required ngModel/>
                 </div>
-                <div>
-                    <label for="lastNameInput">Last Name:</label>
-                    <input type="text" class="loginField" name="lastname" placeholder="LAST NAME" id="lastNameInput" required ngModel/>
+                <div class="form-element-wrapper">
+                    <label for="last-name-input">Last Name:</label>
+                    <input type="text" class="login-field" name="lastname" placeholder="LAST NAME" id="last-name-input" required ngModel/>
                 </div>
-                <div class="formElementWrapper">
-                    <label for="aboutTextArea">Write something about yourself: (optional)</label>
-                    <textarea name="about" id="aboutTextArea" cols="40" rows="10" placeholder="ABOUT" ngModel></textarea>
+                <div class="form-element-wrapper">
+                    <label for="about-textArea">Write something about yourself (optional):</label>
+                    <textarea name="about" id="about-textarea" cols="25" rows="10" placeholder="ABOUT" ngModel></textarea>
                 </div>
-                <div class="formElementWrapper">
-                    <input type="submit"/>
+                <div class="form-element-wrapper">
+                    <input type="submit" class="attention-buttons" value="SUBMIT"/>
                 </div>
             </div>
         </form>
-        <p *ngIf="getRegistrationMessage()">{{ getRegistrationMessage() }}</p>
-        <button id="regFormCloseButton" (click)="closeRegistrationDialog()">CANCEL</button>
+        <p *ngIf="getRegistrationMessage()" id="registration-dialog-message">{{ getRegistrationMessage() }}</p>
     </div>
 </dialog>
 
