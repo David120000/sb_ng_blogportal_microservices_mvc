@@ -116,9 +116,6 @@ export class RestClientService {
     if(error.status === 0) {
       errorText += "client-side or network error.";
     }
-    else if(error.status === 400) {
-      errorText += error.message;
-    }
     else {
       errorText += error.error;
     }
