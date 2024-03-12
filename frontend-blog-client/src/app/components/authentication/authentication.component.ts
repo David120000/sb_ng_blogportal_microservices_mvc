@@ -139,8 +139,8 @@ export class AuthenticationComponent implements OnInit, OnDestroy {
     return this.loginLabelText;
   }
 
-  public getEmailToRegister(): string | undefined {
-    return this.emailToRegister;
+  public getEmailToRegister(): string {
+    return (this.emailToRegister) ? this.emailToRegister : '';
   }
 
   public showRegistrationDialog(emailToRegister: string | undefined) {

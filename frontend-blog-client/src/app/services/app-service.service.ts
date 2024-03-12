@@ -54,7 +54,7 @@ export class AppServiceService {
               // the endpoint returns a 201 status with empty body hence the 'response' is null
               let result = new CompletionStatusInformation();
               result.executedSuccessfully = true;
-              result.message = "Account registered successfully. Now you can log in.";
+              result.message = "Account registered successfully. \nNow you can log in.";
               observer.next(result);
             },
             error: (error) => {

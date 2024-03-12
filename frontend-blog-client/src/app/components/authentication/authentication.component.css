@@ -93,6 +93,10 @@
     font-weight: 500;
 }
 
+*:disabled {
+    opacity: 0.66;
+}
+
 @media (hover: hover) {
     #login-form button:hover {
         background-color: orangered;

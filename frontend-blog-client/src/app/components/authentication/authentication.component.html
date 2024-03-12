@@ -43,7 +43,7 @@
             <div class="form-input-container">
                 <div class="form-element-wrapper">
                     <label for="email-input">Email Address:</label>
-                    <input type="email" class="login-field" name="email" placeholder="EMAIL ADDRESS" id="email-input" [value]="getEmailToRegister()" required ngModel autofocus/>
+                    <input type="email" class="login-field" name="email" placeholder="EMAIL ADDRESS" id="email-input" [value]="getEmailToRegister()" required [ngModel]="getEmailToRegister()" autofocus/>
                 </div>
                 <div class="form-element-wrapper">
                     <label for="password-first-input">Password:</label>
