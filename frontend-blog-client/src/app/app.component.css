@@ -44,9 +44,10 @@
     margin: 10px 8px;
 }
 
-.nav-element p {
+.nav-element-text {
     margin: 3px 0;
     font-weight: bold;
+    text-align: center;
 }
 
 .nav-svgs {

@@ -1,5 +1,5 @@
 #login-main {
-    min-height: 80px;
+    min-height: 8.3vh;
 }
 
 .main-label-text {
@@ -114,3 +114,10 @@
         }
     }
 }
+
+@media screen and (max-width: 400px) {
+    #login-main {
+        min-height: 12.5vh;
+    }
+}
+    
