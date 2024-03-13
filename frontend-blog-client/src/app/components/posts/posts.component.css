@@ -1,0 +1,83 @@
+ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+#posts-main {
+    padding-top: 8px;
+    max-width: 590px;
+    height: 64vh;
+    overflow-y: scroll;
+    scrollbar-color: rgba(70, 131, 180, 0.05) azure;
+    scrollbar-width: thin;
+    transition: scrollbar-color 0.3s ease-in;
+}
+
+.post-element {
+    background-color: #f5ff3a05;
+    border-radius: 5px;
+    box-shadow: 0 0 3px 2px rgba(70, 131, 180, 0.25);
+    padding: 10px;
+    margin: 3px 8px 15px 3px;
+}
+
+.post-element-content {
+    font-weight: 500;
+    padding-bottom: 10px;
+}
+
+.post-element-author {
+    font-size: small;
+    border-top-width: 2px;
+    border-top-style: solid;
+    padding: 2px 20px 10px 20px;
+}
+
+.post-element-byauthor {
+    cursor: pointer;
+}
+
+#load-posts-button {
+    width: 100%;
+    outline: none;
+    border: 0;
+    font-weight: 500;
+    color: #333;
+    background-color: azure;
+    text-shadow: 1px 1px 2px darkgrey;
+    cursor: pointer;
+    transition: all 0.3s;
+}
+
+#posts-message {
+    font-size: small;
+    text-align: center;
+    transition: opacity 0.5s;
+}
+
+*:disabled {
+    opacity: 0.66;
+    cursor: default;
+}
+
+@media (hover: hover) {
+    .post-element-byauthor:hover {
+        color: orangered;
+    }
+
+    #posts-main:hover {
+        scrollbar-color: rgba(70, 131, 180, 0.25) azure;
+    }
+
+    #load-posts-button:hover {
+        color: orangered;
+        text-shadow: 1px 2px 3px darkgrey;
+    }
+}
+
+@media screen and (max-width: 400px) {
+    #posts-main {
+        max-height: 59vh;
+    }
+}

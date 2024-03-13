@@ -1,12 +1,16 @@
 <div id="posts-main">
     <div *ngIf="isUserAuthenticated(); else notAuthenticated">
         <ul id="posts-list">
-            <li *ngFor="let post of getPosts()">
+            <li *ngFor="let post of getPosts(); let i = index">
                 <div class="post-element">
                     <div class="post-element-content" style="white-space: pre-line">{{ post.content }}</div>
-                    <div class="post-element-author">
-                        <span class="post-element-createdat">{{ post.createdAt }} </span>
-                        <span class="post-element-byauthor" [routerLink]="['/read/posts-by', post.authorEmail]">by {{ (getAuthorProfile(post.authorEmail!).name === undefined) ? post.authorEmail : getAuthorProfile(post.authorEmail!).name }}</span>
+                    <div class="post-element-author" [style.borderTopColor]="getAuthorColor(post.authorEmail!)" >
+                        <span class="post-element-createdat">
+                            {{ post.createdAt | date : "EEEE HH:mm, YYYY-MM-dd"}} 
+                        </span>
+                        <span class="post-element-byauthor" [routerLink]="['/read/posts-by', post.authorEmail]">
+                            by {{ (getAuthorProfile(post.authorEmail!).name === undefined) ? post.authorEmail : getAuthorProfile(post.authorEmail!).name }}
+                        </span>
                     </div>
                 </div>
             </li>
@@ -16,5 +20,7 @@
     <ng-template #notAuthenticated>
         <p>Posts are only accessible for authenticated users.</p>
     </ng-template>
-    <p id="posts-message">{{ getMessage() }}</p>
+    <p id="posts-message" [style.color]="(fetchErrorHappened())?'#333':'red'" [style.opacity]="(isFetchMessageVisible())?1:0">
+        {{ getMessage() }}
+    </p>
 </div>
