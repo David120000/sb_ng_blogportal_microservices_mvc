@@ -1,4 +1,4 @@
-import { Component, DoCheck, ElementRef, OnDestroy, OnInit, Renderer2 } from '@angular/core';
+import { Component, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthenticatedUser } from 'src/app/models/authenticated-user';
@@ -34,12 +34,7 @@ export class PostsComponent implements OnInit, OnDestroy {
   private lineColors: Array<string>;
 
 
-  constructor(
-    private service: AppServiceService, 
-    private route: ActivatedRoute,
-    private elementRef: ElementRef,
-    private renderer: Renderer2
-    ) {
+  constructor(private service: AppServiceService, private route: ActivatedRoute) {
     
     this.authenticatedUser = this.service.getAuthentication();
     
@@ -124,6 +119,14 @@ export class PostsComponent implements OnInit, OnDestroy {
     return this.service.getProfileByEmail(email);
   }
 
+  public deletePost(post: Post) {
+
+  }
+
+  public changePostVisibility(post: Post) {
+
+  }
+
   public getAuthorColor(stringToHash: string): string | undefined {
 
     let hash = 0;
@@ -166,6 +169,10 @@ export class PostsComponent implements OnInit, OnDestroy {
     return this.authenticatedUser.hasToken();
   }
 
+  public isAuthorIdenticalToAuthenticatedUser(authorEmail: string): boolean {
+    return authorEmail === this.authenticatedUser.subjectId;
+  }
+
   public isLoadButtonDisabled(): boolean {
     return this.loadButtonDisabled;
   }
@@ -174,12 +181,31 @@ export class PostsComponent implements OnInit, OnDestroy {
     return this.message;
   }
 
-  public fetchErrorHappened(): boolean {
+  public noFetchErrorHappened(): boolean {
     return this.fetchError;
   }
 
   public isFetchMessageVisible(): boolean {
     return this.fetchMessageVisible;
+  }
+
+  public isFilterModeActive(): boolean {
+    return (this.onlyListOwnPosts || typeof this.filterResultsByAuthor === "string");
+  }
+
+  public getNameOfFilteredAuthor(): string {
+
+    let authorEmail = 
+      (this.onlyListOwnPosts) ? 
+        (this.authenticatedUser.subjectId)? this.authenticatedUser.subjectId : '' : 
+        (typeof this.filterResultsByAuthor === "string") ? this.filterResultsByAuthor : '';
+    
+    let name = 
+      (this.getAuthorProfile(authorEmail).name === undefined) ? 
+        authorEmail : 
+        this.getAuthorProfile(authorEmail).name!;
+
+    return name;
   }
 
 }
