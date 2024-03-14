@@ -80,6 +80,7 @@
     border-width: 2px;
     border-radius: 3px;
     transition: height 0.3s;
+    resize: none;
 }
 
 #about-textarea:focus {
@@ -95,14 +96,15 @@
 
 *:disabled {
     opacity: 0.66;
+    cursor: not-allowed !important;
 }
 
 @media (hover: hover) {
-    #login-form button:hover {
+    #login-form button:hover:enabled {
         background-color: orangered;
     }
 
-    .attention-buttons:hover {
+    .attention-buttons:hover:enabled {
         background-color: orangered;
     }
 
