@@ -1,21 +1,22 @@
 <div id="newpost-main">
     <div *ngIf="isUserAuthenticated(); else notAuthenticated" id="form-wrapper">
-        <form #postForm="ngForm" (submit)="newPost(postForm)" id="postForm">
+        <form #postForm="ngForm" (submit)="newPost(postForm)" id="postForm" ngNativeValidate>
             
-            <textarea name="content" id="post-content" cols="80" rows="20" placeholder="My thoughts are..." required ngModel></textarea>
+            <textarea name="content" id="post-content" cols="8" rows="15" placeholder="My thoughts are..." required ngModel></textarea>
             
             <fieldset>
                 <legend>Should this post be visible to the public?</legend>
-                <p>You can change this setting later.</p>
-                <input type="checkbox" name="published" [(ngModel)]="checkedDefault"/>
+                <p id="fieldset-legend-subtext">You can change this setting later.</p>
+                <input type="checkbox" name="published" [(ngModel)]="publishCheckerDefault"/>
                 <label for="publish-checkbox">Publish this post</label>
             </fieldset>
 
-            <button type="submit" id="loginButton" [disabled]="isSubmitButtonDisabled() || postForm.value.content?.length === 0">SAVE</button>
+            <button type="submit" id="post-submit-button" [disabled]="isSubmitButtonDisabled() || postForm.value.content?.length === 0">SAVE</button>
         </form>
     </div>
     <ng-template #notAuthenticated>
-        <p>Please log in and then you can create a post immediately!</p>
+        <p id="not-authenticated-message">Please log in and then you can create a post immediately!</p>
+        <div class="background-text">401</div>
     </ng-template>
-    <p id="newpost-message">{{ getMessage() }}</p>
+    <p id="newpost-message" [style.color]="(noRequestErrorHappened())?'#333':'red'">{{ getMessage() }}</p>
 </div>

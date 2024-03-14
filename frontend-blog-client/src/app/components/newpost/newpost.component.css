@@ -1,0 +1,70 @@
+#newpost-main {
+    width: 100%;
+    max-width: 590px;
+}
+
+#post-content {
+    outline: none;
+    padding: 10px;
+    margin-left: 2px;
+    margin-right: 10px;
+    width: 90%;
+    height: 35vh;
+    font-size: large;
+    resize: none;
+}
+
+#postForm fieldset {
+    width: 90%;
+}
+
+#fieldset-legend-subtext {
+    font-size: smaller;
+    margin: 2px 14px 11px 14px;
+}
+
+#post-submit-button {
+    margin: 6px 2px 0 2px;
+    width: 94%;
+    background-color: steelblue;
+    color: white;
+    text-shadow: 0 0 2px black;
+    padding: 3px 6px;
+    border-style: solid;
+    border-radius: 3px;
+    cursor: pointer;
+}
+
+#newpost-message {
+    cursor: default;
+    text-align: center;
+    font-weight: 500;
+}
+
+#not-authenticated-message {
+    margin-top: 15%;
+    font-size: larger;
+    font-weight: bold;
+    text-decoration: underline overline rgba(255, 68, 0, 0.8) 3px;
+}
+
+.background-text {
+    position: relative;
+    top: 10vh;
+    left: 5%; 
+    font-size: 10rem;
+    opacity: 0.07;
+    cursor: default;
+    overflow: hidden;
+}
+
+*:disabled {
+    opacity: 0.66;
+    cursor: not-allowed !important;
+}
+
+@media (hover: hover) {
+    #post-submit-button:hover:enabled {
+        background-color: orangered;
+    }
+}

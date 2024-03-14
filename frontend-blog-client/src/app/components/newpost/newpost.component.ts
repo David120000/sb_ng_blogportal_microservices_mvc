@@ -17,12 +17,15 @@ export class NewPostComponent implements OnInit, OnDestroy{
 
   private message: string | undefined;
   private submitButtonDisabled: boolean;
-  public checkedDefault: boolean;
+  public publishCheckerDefault: boolean;
+
+  private requestError: boolean;
 
   constructor(private service: AppServiceService) {
     this.authenticatedUser = this.service.getAuthentication();
     this.submitButtonDisabled = false;
-    this.checkedDefault = true;
+    this.publishCheckerDefault = true;
+    this.requestError = false;
   }
 
 
@@ -40,6 +43,9 @@ export class NewPostComponent implements OnInit, OnDestroy{
   public async newPost(form: NgForm) {
     
     this.submitButtonDisabled = true;
+    this.requestError = false;
+    this.message = undefined;
+
     let post = new NewPostDTO(
       (this.authenticatedUser.subjectId) ? this.authenticatedUser.subjectId : "anonymus",
       form.value.content,
@@ -48,9 +54,11 @@ export class NewPostComponent implements OnInit, OnDestroy{
     
     let response = await this.service.newPost(post);
     
+    this.requestError = response.executedSuccessfully;
     this.message = response.message;
+    
     this.submitButtonDisabled = false;
-    this.checkedDefault = true;
+    this.publishCheckerDefault = true;
   }
 
   public isUserAuthenticated(): boolean {
@@ -63,6 +71,10 @@ export class NewPostComponent implements OnInit, OnDestroy{
 
   public isSubmitButtonDisabled(): boolean {
     return this.submitButtonDisabled;
+  }
+
+  public noRequestErrorHappened(): boolean {
+    return this.requestError;
   }
 
 }
