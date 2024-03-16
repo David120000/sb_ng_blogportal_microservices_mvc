@@ -84,6 +84,31 @@ export class RestClientService {
     return response;
   }
 
+  public deletePost(postId: string, securityToken: AuthToken): Observable<any> {
+
+    let headers = this.generateAuthorizationHeader(securityToken);
+    let response = this.http.delete(
+      this.BACKEND_URL + '/post/delete/' + postId,
+      {headers: headers}
+    )
+    .pipe(catchError(this.handleGeneralError));
+
+    return response;
+  }
+
+  public updatePost(post: Post, securityToken: AuthToken): Observable<Post> {
+    
+    let headers = this.generateAuthorizationHeader(securityToken);
+    let response = this.http.put<Post>(
+      this.BACKEND_URL + '/post/update',
+      post,
+      {headers: headers}
+    )
+    .pipe(catchError(this.handleGeneralError));
+
+    return response;
+  }
+
   public getProfile(userEmail: string, securityToken: AuthToken): Observable<UserProfileDTO> {
 
     let headers = this.generateAuthorizationHeader(securityToken);

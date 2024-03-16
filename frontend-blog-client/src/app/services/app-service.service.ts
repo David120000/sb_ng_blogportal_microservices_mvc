@@ -227,6 +227,45 @@ export class AppServiceService {
     );
   }
 
+  public deletePost(post: Post) {
+
+    if(post.id) {
+      let securityToken = this.getSecurityToken();
+
+      this.restClient.deletePost(post.id, securityToken)
+        .subscribe({
+          next: (response) => {
+            this.postsCache.deletePostFromCache(post);
+          },
+          error: (error) => {
+            console.error(error.error);
+          },
+          complete: () => console.log("Post deletion completed.")
+        });
+    }
+  }
+
+  public changePostVisibility(post: Post) {
+
+    let changedPost = post;
+    changedPost.published = !post.published;
+
+    let securityToken = this.getSecurityToken();
+
+    this.restClient.updatePost(changedPost, securityToken)
+      .subscribe({
+        next: (response) => {
+          console.log("post updated successfully in backend");
+          let updatedPost = Object.assign(new Post(), response);
+          this.postsCache.updatePostInCache(updatedPost);
+        },
+        error: (error) => {
+          console.error(error.error);
+        },
+        complete: () => console.log("Post updated.")
+      });
+  }
+
   private fetchProfileByEmail(email: string) {
 
     if(!this.userProfileFetchSemafor.includes(email)) {
