@@ -1,4 +1,4 @@
-import { Component, OnDestroy, OnInit } from '@angular/core';
+import { Component, ElementRef, OnDestroy, OnInit } from '@angular/core';
 import { ActivatedRoute } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { AuthenticatedUser } from 'src/app/models/authenticated-user';
@@ -34,7 +34,7 @@ export class PostsComponent implements OnInit, OnDestroy {
   private lineColors: Array<string>;
 
 
-  constructor(private service: AppServiceService, private route: ActivatedRoute) {
+  constructor(private service: AppServiceService, private route: ActivatedRoute, private elementRef: ElementRef) {
     
     this.authenticatedUser = this.service.getAuthentication();
     
@@ -119,12 +119,36 @@ export class PostsComponent implements OnInit, OnDestroy {
     return this.service.getProfileByEmail(email);
   }
 
-  public deletePost(post: Post) {
+  public openDeleteConfirmation(index: number) {
 
+    let postsMain = this.elementRef.nativeElement.querySelector('#posts-main');
+    let wrapperDiv = this.elementRef.nativeElement.querySelector('#delete-conf-wrap-' + index);
+    let dialog = this.elementRef.nativeElement.querySelector('#delete-conf-dia-' + index);
+
+    dialog.style.left = wrapperDiv.offsetLeft + "px";
+    dialog.style.top = (wrapperDiv.offsetTop- postsMain.scrollTop) + "px";
+    dialog.showModal();
+
+    let postElement = this.elementRef.nativeElement.querySelector('#post-element-' + index);
+    postElement.style.color = "red";
+  }
+
+  public closeDeleteConfirmation(index: number) {
+    this.elementRef.nativeElement.querySelector('#delete-conf-dia-' + index)
+      .close();    
+  }
+
+  public setPostTextColorToDefault(index: number) {
+    let postElement = this.elementRef.nativeElement.querySelector('#post-element-' + index);
+    postElement.style.color = "#333";
+  }
+
+  public deletePost(post: Post) {
+    this.service.deletePost(post);
   }
 
   public changePostVisibility(post: Post) {
-
+    this.service.changePostVisibility(post);
   }
 
   public getAuthorColor(stringToHash: string): string | undefined {

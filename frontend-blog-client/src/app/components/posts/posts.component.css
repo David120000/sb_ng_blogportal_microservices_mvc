@@ -101,6 +101,17 @@
     margin-bottom: 4px;
 }
 
+.delete-confirmation-wrapper {
+    position: relative;
+    padding: 8px 12px;
+    top: 10px;
+}
+
+.delete-confirmation-dialog {
+    margin: 0;
+    box-shadow: 0 0 3px 2px rgba(70, 131, 180);
+}
+
 #load-posts-button {
     width: 100%;
     outline: none;
