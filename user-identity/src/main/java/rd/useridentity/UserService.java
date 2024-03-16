@@ -49,8 +49,11 @@ public class UserService {
         }
         else {
             throw new IllegalArgumentException("The email address " + user.getEmail() + " already registered.");
-        }
-          
+        }       
+    }
+
+    public boolean checkIfUserExistsInDb(String email) {
+        return repository.existsById(email);
     }
 
     public void updateUserData(User user) {

@@ -37,6 +37,13 @@ public class UserController {
         return ResponseEntity.ok(userProfileData);
     }
 
+    @GetMapping("/user/exists/{user-email}")
+    public ResponseEntity<Boolean> checkIfUserExists(@PathVariable(name="user-email") String email) {
+
+        var doesExist = service.checkIfUserExistsInDb(email);
+        return ResponseEntity.ok(doesExist);
+    }
+
     @PostMapping("/user/new")
     @ResponseStatus(HttpStatus.CREATED)
     public void registerUser(@RequestBody User user) {

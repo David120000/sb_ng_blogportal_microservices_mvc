@@ -15,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 public class PostService {
     
     private final PostRepository repository;
+    private final UserIdentityFeignClient userClient;
 
 
     public Page<Post> getPosts(int pageNumber, int pageSize, String authorEmail, Boolean includeNonPublished) {
@@ -45,6 +46,14 @@ public class PostService {
 
     public Post saveNewPost(NewPostDTO newPost) {
 
+        var authorValid = userClient
+            .checkIfUserExists(newPost.getAuthorEmail())
+            .getBody();
+
+        if(!authorValid) {
+            throw new IllegalArgumentException("Invalid post author. " + newPost.getAuthorEmail() + " is not registered.");
+        }
+
         var post = Post.builder()
                         .authorEmail(newPost.getAuthorEmail())
                         .content(newPost.getContent())
@@ -56,6 +65,14 @@ public class PostService {
     }
 
     public Post updatePost(Post post) {
+
+        var authorValid = userClient
+            .checkIfUserExists(post.getAuthorEmail())
+            .getBody();
+
+        if(!authorValid) {
+            throw new IllegalArgumentException("Invalid post author. " + post.getAuthorEmail() + " is not registered.");
+        }
 
         Post updatedPost = null;
 
