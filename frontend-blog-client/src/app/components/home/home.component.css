@@ -1,0 +1,42 @@
+#home-container {
+    max-width: 590px;
+}
+
+#title-container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    margin-top: 35px;
+    margin-bottom: 30px;
+}
+#project-title {
+    text-align: center;
+}
+
+#author-container {
+    width: 70%;
+    display: flex;
+    justify-content: center;
+    background-color: orangered;
+}
+
+#author-container h4 {
+    position: relative;
+}
+
+#author {
+    background-color: azure;
+    margin: 0;
+    padding-left: 20px;
+    padding-right: 20px;
+}
+
+#home-content {
+    font-weight: 500;
+    text-align: justify;
+}
+
+#home-content a {
+    color: inherit;
+    text-decoration-color: inherit;
+}
