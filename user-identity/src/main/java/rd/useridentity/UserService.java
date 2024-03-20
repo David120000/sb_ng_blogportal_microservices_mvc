@@ -35,6 +35,8 @@ public class UserService {
 
     public void registerUser(User user) {
 
+        this.validateUserObjectArguments(user);
+
         if(!repository.existsById(user.getEmail().toLowerCase())) {
 
             if(validator.validateUser(user)) {
@@ -58,6 +60,8 @@ public class UserService {
 
     public void updateUserData(User user) {
 
+        this.validateUserObjectArguments(user);
+
         if(repository.existsById(user.getEmail().toLowerCase())) {
 
             if(validator.validateUser(user)) {
@@ -78,6 +82,16 @@ public class UserService {
 
     public void deleteUserById(String email) {
         repository.deleteById(email);
+    }
+
+    private void validateUserObjectArguments(User user) {
+
+        if(user.getEmail() == null) throw new IllegalArgumentException("Email field is required. It cannot be empty (null).");
+        if(user.getPassword() == null) throw new IllegalArgumentException("Password field is required. It cannot be empty (null).");
+        if(user.getRole() == null) throw new IllegalArgumentException("Role field is required. It cannot be empty (null).");
+        if(user.getAccountEnabled() == null) throw new IllegalArgumentException("Account Enabled field is required. It cannot be empty (null).");
+        if(user.getFirstName() == null) throw new IllegalArgumentException("First Name field is required. It cannot be empty (null).");
+        if(user.getLastName() == null) throw new IllegalArgumentException("Last Name field is required. It cannot be empty (null).");
     }
 
 }

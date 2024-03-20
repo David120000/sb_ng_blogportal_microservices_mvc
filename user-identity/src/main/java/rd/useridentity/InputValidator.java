@@ -29,6 +29,9 @@ public class InputValidator {
 
     public boolean validateUser(User user) throws IllegalArgumentException {
 
+        if(user.getEmail() == null) throw new IllegalArgumentException("Email field is required. It cannot be empty (null).");
+        if(user.getPassword() == null) throw new IllegalArgumentException("Password field is required. It cannot be empty (null).");
+
         Matcher emailMatcher = this.emailPattern.matcher(user.getEmail());
         boolean validEmail = emailMatcher.matches();
         if(!validEmail) throw new IllegalArgumentException("The given email address (" + user.getEmail() + ") is invalid.");
