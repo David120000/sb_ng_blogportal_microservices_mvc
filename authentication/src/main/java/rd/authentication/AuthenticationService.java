@@ -20,6 +20,12 @@ public class AuthenticationService {
 
     public AuthToken authenticateUser(AuthRequest userRequest) throws NoSuchElementException, CredentialException {
 
+        if(userRequest.getEmail() == null) 
+            throw new IllegalArgumentException("Email field is required. It cannot be empty (null).");
+        
+        if(userRequest.getPassword() == null) 
+            throw new IllegalArgumentException("Password field is required. It cannot be empty (null).");
+
         User user = userClient
             .getUser(userRequest.getEmail().toLowerCase())
             .getBody();
@@ -38,6 +44,8 @@ public class AuthenticationService {
     }
 
     public UserAuthorization authorizeUser(AuthToken token) throws IllegalArgumentException {
+
+        if(token.getJwt() == null) throw new IllegalArgumentException("JWT is required. It cannot be empty (null).");
 
         boolean authenticated = jwtUtil.validateToken(token.getJwt());
         String subject = jwtUtil.extractUserEmail(token.getJwt());
