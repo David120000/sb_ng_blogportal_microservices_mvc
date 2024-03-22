@@ -20,6 +20,9 @@ public class PostService {
 
     public Page<Post> getPosts(int pageNumber, int pageSize, String authorEmail, Boolean includeNonPublished) {
 
+        if(pageNumber < 0) throw new IllegalArgumentException("Page number cannot be negative.");
+        if(pageSize < 1) throw new IllegalArgumentException("Page size should be at least one.");
+
         Page<Post> pages = null;
 
         if(authorEmail != null && !authorEmail.isEmpty()) {
@@ -46,6 +49,8 @@ public class PostService {
 
     public Post saveNewPost(NewPostDTO newPost) {
 
+        this.validateNewPostDTO(newPost);
+
         var authorValid = userClient
             .checkIfUserExists(newPost.getAuthorEmail())
             .getBody();
@@ -65,6 +70,8 @@ public class PostService {
     }
 
     public Post updatePost(Post post) {
+
+        this.validePostToUpdate(post);
 
         var authorValid = userClient
             .checkIfUserExists(post.getAuthorEmail())
@@ -104,6 +111,30 @@ public class PostService {
     private Page<Post> getAllPostsByAuthor(String authorEmail, int pageNumber, int pageSize) {
 
         return repository.findByAuthorEmailOrderByCreatedAtDesc(authorEmail, PageRequest.of(pageNumber, pageSize));
+    }
+
+    private void validateNewPostDTO(NewPostDTO newPost) {
+
+        if(newPost.getContent() == null || newPost.getContent().isEmpty()) 
+            throw new IllegalArgumentException("Post content cannot be empty or null.");
+
+        if(newPost.getAuthorEmail() == null || newPost.getAuthorEmail().isEmpty()) 
+            throw new IllegalArgumentException("Post author cannot be empty or null.");
+
+        if(newPost.getPublished() == null)
+            throw new IllegalArgumentException("Post publishment status can be either true or false, but not null.");
+    }
+
+    private void validePostToUpdate(Post postToUpdate) {
+
+        if(postToUpdate.getAuthorEmail() == null || postToUpdate.getAuthorEmail().isBlank())
+           throw new IllegalArgumentException("Post author cannot be empty or null.");
+
+        if(postToUpdate.getCreatedAt() == null || postToUpdate.getCreatedAt().isAfter(LocalDateTime.now()))
+            throw new IllegalArgumentException("Post creation time cannot be null or in the future.");
+
+        if(postToUpdate.getContent() == null || postToUpdate.getContent().isEmpty())
+            throw new IllegalArgumentException("Post content cannot be empty or null.");
     }
 
 }

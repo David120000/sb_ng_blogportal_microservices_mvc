@@ -7,6 +7,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 
+import feign.FeignException;
+
 @ControllerAdvice
 public class HttpRequestAdvice {
     
@@ -20,6 +22,12 @@ public class HttpRequestAdvice {
     public ResponseEntity<String> handleNoSuchElementConflict(NoSuchElementException ex) {
 
         return new ResponseEntity<>(ex.getMessage(), HttpStatus.BAD_REQUEST);
+    }
+
+    @ExceptionHandler(FeignException.class)
+    public ResponseEntity<String> handleUserIdentityClientConflict(FeignException ex) {
+
+        return new ResponseEntity<>(ex.getMessage(), HttpStatus.INTERNAL_SERVER_ERROR);
     }
     
 }
