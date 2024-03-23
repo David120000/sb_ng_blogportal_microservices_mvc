@@ -33,7 +33,7 @@ public class PostController {
     }
 
     @GetMapping("/post/get")
-    public Page<Post> getMethodName(
+    public Page<Post> getPosts(
             @RequestParam int pageNumber,
             @RequestParam int pageSize,
             @RequestParam(required = false) String authorEmail,
