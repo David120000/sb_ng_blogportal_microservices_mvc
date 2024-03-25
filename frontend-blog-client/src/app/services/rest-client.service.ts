@@ -17,7 +17,7 @@ export class RestClientService {
   private readonly BACKEND_URL: string;
 
   constructor(private http: HttpClient) { 
-    this.BACKEND_URL = "http://localhost:8080";
+    this.BACKEND_URL = "/api";
   }
 
 
