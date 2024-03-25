@@ -9,6 +9,8 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import rd.post.model.NewPostDTO;
+import rd.post.model.Post;
 
 @Service
 @RequiredArgsConstructor

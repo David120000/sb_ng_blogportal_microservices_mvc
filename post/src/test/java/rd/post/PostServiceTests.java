@@ -11,6 +11,9 @@ import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.http.ResponseEntity;
 
+import rd.post.model.NewPostDTO;
+import rd.post.model.Post;
+
 import java.time.LocalDateTime;
 import java.util.List;
 import java.util.NoSuchElementException;

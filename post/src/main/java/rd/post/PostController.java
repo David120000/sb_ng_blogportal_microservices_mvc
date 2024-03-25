@@ -3,6 +3,8 @@ package rd.post;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import rd.post.model.NewPostDTO;
+import rd.post.model.Post;
 
 import org.springframework.data.domain.Page;
 import org.springframework.http.ResponseEntity;
