@@ -1,4 +1,4 @@
-package rd.authentication;
+package rd.authentication.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

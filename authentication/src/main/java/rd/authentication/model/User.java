@@ -1,4 +1,4 @@
-package rd.authentication;
+package rd.authentication.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,10 +7,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class UserAuthorization {
+public class User {
     
-    private String subjectId;
-    private Boolean authenticated;
+    private String email;
+    private String password;
     private String role;
-
+    private boolean enabled;
+    
 }
