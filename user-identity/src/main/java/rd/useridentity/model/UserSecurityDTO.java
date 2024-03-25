@@ -1,4 +1,4 @@
-package rd.useridentity;
+package rd.useridentity.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -7,10 +7,11 @@ import lombok.Getter;
 @Getter
 @AllArgsConstructor
 @Builder
-public class UserProfileDataDTO {
+public class UserSecurityDTO {
     
     private String email;
-    private String name;
-    private String about;
+    private String password;
+    private String role;
+    private Boolean enabled;
 
 }

@@ -1,4 +1,4 @@
-package rd.useridentity;
+package rd.useridentity.model;
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.Id;
