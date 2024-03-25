@@ -6,6 +6,9 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import rd.useridentity.model.User;
+import rd.useridentity.model.UserProfileDataDTO;
+import rd.useridentity.model.UserSecurityDTO;
 
 @Service
 @RequiredArgsConstructor

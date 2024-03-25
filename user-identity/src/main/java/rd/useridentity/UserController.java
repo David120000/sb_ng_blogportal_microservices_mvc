@@ -11,6 +11,10 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import rd.useridentity.model.User;
+import rd.useridentity.model.UserProfileDataDTO;
+import rd.useridentity.model.UserSecurityDTO;
+
 import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 

@@ -7,6 +7,8 @@ import java.util.regex.Pattern;
 
 import org.springframework.stereotype.Service;
 
+import rd.useridentity.model.User;
+
 @Service
 public class InputValidator {
 

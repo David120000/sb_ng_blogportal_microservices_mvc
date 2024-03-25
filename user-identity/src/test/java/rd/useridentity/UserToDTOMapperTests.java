@@ -4,6 +4,10 @@ import org.junit.jupiter.api.BeforeAll;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 
+import rd.useridentity.model.User;
+import rd.useridentity.model.UserProfileDataDTO;
+import rd.useridentity.model.UserSecurityDTO;
+
 import static org.junit.jupiter.api.Assertions.*;
 
 public class UserToDTOMapperTests {

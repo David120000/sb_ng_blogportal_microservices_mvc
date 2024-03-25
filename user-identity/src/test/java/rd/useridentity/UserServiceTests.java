@@ -8,6 +8,10 @@ import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import rd.useridentity.model.User;
+import rd.useridentity.model.UserProfileDataDTO;
+import rd.useridentity.model.UserSecurityDTO;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyString;
 import static org.mockito.Mockito.*;

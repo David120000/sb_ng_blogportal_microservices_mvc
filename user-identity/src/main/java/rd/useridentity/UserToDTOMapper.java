@@ -2,6 +2,10 @@ package rd.useridentity;
 
 import org.springframework.stereotype.Service;
 
+import rd.useridentity.model.User;
+import rd.useridentity.model.UserProfileDataDTO;
+import rd.useridentity.model.UserSecurityDTO;
+
 @Service
 public class UserToDTOMapper {
     
