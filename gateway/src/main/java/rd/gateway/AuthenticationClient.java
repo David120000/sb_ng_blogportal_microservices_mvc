@@ -6,6 +6,9 @@ import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.web.client.RestClient;
 
+import rd.gateway.model.AuthToken;
+import rd.gateway.model.Authorization;
+
 @Component
 public class AuthenticationClient {
     

@@ -10,6 +10,8 @@ import org.springframework.stereotype.Component;
 import org.springframework.web.server.ServerWebExchange;
 
 import lombok.RequiredArgsConstructor;
+import rd.gateway.model.AuthToken;
+import rd.gateway.model.Authorization;
 import reactor.core.publisher.Mono;
 
 @Component
