@@ -1,4 +1,4 @@
-package rd.post;
+package rd.post.model;
 
 import java.time.LocalDateTime;
 

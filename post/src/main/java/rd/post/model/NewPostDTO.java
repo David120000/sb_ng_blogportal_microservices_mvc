@@ -1,4 +1,4 @@
-package rd.post;
+package rd.post.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
