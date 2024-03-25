@@ -11,6 +11,9 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import lombok.RequiredArgsConstructor;
+import rd.authentication.model.AuthRequest;
+import rd.authentication.model.AuthToken;
+import rd.authentication.model.UserAuthorization;
 
 @RestController
 @RequestMapping("/api")

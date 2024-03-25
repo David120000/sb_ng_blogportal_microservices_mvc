@@ -8,6 +8,11 @@ import org.mockito.MockitoAnnotations;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
+import rd.authentication.model.AuthRequest;
+import rd.authentication.model.AuthToken;
+import rd.authentication.model.User;
+import rd.authentication.model.UserAuthorization;
+
 import java.util.NoSuchElementException;
 import javax.security.auth.login.CredentialException;
 

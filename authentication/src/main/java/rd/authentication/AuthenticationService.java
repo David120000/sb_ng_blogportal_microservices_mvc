@@ -8,6 +8,10 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
 import lombok.RequiredArgsConstructor;
+import rd.authentication.model.AuthRequest;
+import rd.authentication.model.AuthToken;
+import rd.authentication.model.User;
+import rd.authentication.model.UserAuthorization;
 
 @Service
 @RequiredArgsConstructor

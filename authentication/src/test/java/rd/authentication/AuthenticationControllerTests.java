@@ -12,6 +12,11 @@ import org.springframework.test.web.servlet.MockMvc;
 import javax.security.auth.login.CredentialException;
 
 import feign.FeignException;
+import rd.authentication.model.AuthRequest;
+import rd.authentication.model.AuthToken;
+import rd.authentication.model.User;
+import rd.authentication.model.UserAuthorization;
+
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
 import static org.mockito.Mockito.*;

@@ -5,6 +5,8 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
+import rd.authentication.model.User;
+
 @FeignClient("users")
 public interface UserIdentityFeignClient {
     
