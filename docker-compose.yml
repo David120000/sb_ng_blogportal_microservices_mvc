@@ -128,6 +128,12 @@ services:
         condition: service_healthy
     ports: 
       - "8080:8080"
+    healthcheck:
+      test: "curl --fail --silent localhost:8080/actuator/health/readiness | grep UP || exit 1"
+      interval: 8s
+      timeout: 3s
+      retries: 5
+      start_period: 8s
     networks:
       - microservices
       - frontend
@@ -158,6 +164,19 @@ services:
       - "9411:9411"
     networks:
       - microservices
+
+  blog-client:
+    container_name: blog-client
+    build:
+      context: ./frontend-blog-client
+      dockerfile: ../angular-frontend.Dockerfile
+    depends_on:
+      apigateway:
+        condition: service_healthy
+    ports:
+      - "4200:4200"
+    networks:
+      - frontend
 
 volumes:
   mongo-data: 
