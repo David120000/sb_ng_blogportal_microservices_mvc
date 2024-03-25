@@ -1,4 +1,4 @@
-package rd.gateway;
+package rd.gateway.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;

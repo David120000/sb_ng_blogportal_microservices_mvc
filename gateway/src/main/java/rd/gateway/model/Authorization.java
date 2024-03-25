@@ -1,4 +1,4 @@
-package rd.gateway;
+package rd.gateway.model;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
