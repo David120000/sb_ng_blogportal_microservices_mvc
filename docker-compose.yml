@@ -5,7 +5,8 @@ services:
     container_name: mongo_db
     image: mongo
     volumes:
-      - mongo-data:/data
+      - ./build/database/postsdb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
+      - mongo_data:/data
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongoroot
       - MONGO_INITDB_ROOT_PASSWORD=root
@@ -13,7 +14,7 @@ services:
       - microservices
 
   mongo-express:
-    container_name: mongo-express
+    container_name: mongo_express
     image: mongo-express
     ports:
       - 8081:8081
@@ -32,12 +33,16 @@ services:
     image: mysql
     restart: unless-stopped
     environment:
-      MYSQL_DATABASE: bloguserdb
-      MYSQL_USER: mysqlroot
-      MYSQL_PASSWORD: root
-      MYSQL_ROOT_PASSWORD: root
+      MYSQL_RANDOM_ROOT_PASSWORD: yes
+    healthcheck:
+      test: ["CMD", "mysqladmin" ,"ping", "-h", "localhost"]
+      interval: 8s
+      timeout: 30s
+      retries: 5
+      start_period: 10s
     volumes:
-    - mysql-data:/var/lib/mysql
+    - ./build/database/bloguserdb:/docker-entrypoint-initdb.d
+    - mysql_data:/var/lib/mysql
     networks:
       - microservices
   
@@ -45,7 +50,7 @@ services:
     container_name: configserver
     build:
       context: ./config-server
-      dockerfile: ../java-microservice.Dockerfile
+      dockerfile: ../build/docker/java-microservice.Dockerfile
     healthcheck:
       test: "curl --fail --silent localhost:8888/actuator/health/readiness | grep UP || exit 1"
       interval: 3s
@@ -59,7 +64,7 @@ services:
     container_name: postservice
     build:
       context: ./post
-      dockerfile: ../java-microservice.Dockerfile
+      dockerfile: ../build/docker/java-microservice.Dockerfile
     depends_on:
       configserver:
         condition: service_healthy
@@ -76,14 +81,14 @@ services:
     container_name: userservice
     build:
       context: ./user-identity
-      dockerfile: ../java-microservice.Dockerfile
+      dockerfile: ../build/docker/java-microservice.Dockerfile
     depends_on:
       configserver:
         condition: service_healthy
       discovery:
         condition: service_healthy
       mysqldb:
-        condition: service_started
+        condition: service_healthy
     healthcheck:
       test: "curl --fail --silent localhost:8060/actuator/health/readiness | grep UP || exit 1"
       interval: 8s
@@ -97,7 +102,7 @@ services:
     container_name: authenticationservice
     build:
       context: ./authentication
-      dockerfile: ../java-microservice.Dockerfile
+      dockerfile: ../build/docker/java-microservice.Dockerfile
     depends_on:
       configserver:
         condition: service_healthy
@@ -118,7 +123,7 @@ services:
     container_name: apigateway
     build:
       context: ./gateway
-      dockerfile: ../java-microservice.Dockerfile
+      dockerfile: ../build/docker/java-microservice.Dockerfile
     depends_on:
       configserver:
         condition: service_healthy
@@ -142,7 +147,7 @@ services:
     container_name: discovery
     build:
       context: ./discovery
-      dockerfile: ../java-microservice.Dockerfile
+      dockerfile: ../build/docker/java-microservice.Dockerfile
     depends_on:
       configserver:
         condition: service_healthy
@@ -169,7 +174,7 @@ services:
     container_name: blog-client
     build:
       context: ./frontend-blog-client
-      dockerfile: ../angular-frontend.Dockerfile
+      dockerfile: ../build/docker/angular-frontend.Dockerfile
     depends_on:
       apigateway:
         condition: service_healthy
@@ -179,8 +184,8 @@ services:
       - frontend
 
 volumes:
-  mongo-data: 
-  mysql-data:
+  mongo_data: 
+  mysql_data:
 
 networks:
   microservices:
