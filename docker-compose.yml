@@ -5,8 +5,8 @@ services:
     container_name: mongo_db
     image: mongo
     volumes:
+      - mongo_data:/data/db
       - ./build/database/postsdb/mongo-init.js:/docker-entrypoint-initdb.d/mongo-init.js:ro
-      - mongo_data:/data
     environment:
       - MONGO_INITDB_ROOT_USERNAME=mongoroot
       - MONGO_INITDB_ROOT_PASSWORD=root
