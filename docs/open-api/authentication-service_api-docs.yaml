@@ -1,0 +1,67 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://172.25.0.9:8050
+  description: Generated server url
+paths:
+  /api/authorize:
+    post:
+      tags:
+      - authentication-controller
+      operationId: authorizeUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthToken'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserAuthorization'
+  /api/authenticate:
+    post:
+      tags:
+      - authentication-controller
+      operationId: authenticateUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AuthRequest'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/AuthToken'
+components:
+  schemas:
+    AuthToken:
+      type: object
+      properties:
+        jwt:
+          type: string
+    UserAuthorization:
+      type: object
+      properties:
+        subjectId:
+          type: string
+        authenticated:
+          type: boolean
+        role:
+          type: string
+    AuthRequest:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string

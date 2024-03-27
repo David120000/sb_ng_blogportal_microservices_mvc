@@ -1,0 +1,195 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://172.25.0.10:8090
+  description: Generated server url
+paths:
+  /api/post/update:
+    put:
+      tags:
+      - post-controller
+      operationId: updatePost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Post'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Post'
+  /api/post/new:
+    post:
+      tags:
+      - post-controller
+      operationId: saveNewPost
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/NewPostDTO'
+        required: true
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Post'
+  /api/post/get:
+    get:
+      tags:
+      - post-controller
+      operationId: getPosts
+      parameters:
+      - name: pageNumber
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: pageSize
+        in: query
+        required: true
+        schema:
+          type: integer
+          format: int32
+      - name: authorEmail
+        in: query
+        required: false
+        schema:
+          type: string
+      - name: includeNonPublished
+        in: query
+        required: false
+        schema:
+          type: boolean
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/PagePost'
+  /api/post/get/{id}:
+    get:
+      tags:
+      - post-controller
+      operationId: getPostById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/Post'
+  /api/post/delete/{id}:
+    delete:
+      tags:
+      - post-controller
+      operationId: deletePostById
+      parameters:
+      - name: id
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    Post:
+      type: object
+      properties:
+        id:
+          type: string
+        authorEmail:
+          type: string
+        createdAt:
+          type: string
+          format: date-time
+        content:
+          type: string
+        published:
+          type: boolean
+    NewPostDTO:
+      type: object
+      properties:
+        authorEmail:
+          type: string
+        content:
+          type: string
+        published:
+          type: boolean
+    PagePost:
+      type: object
+      properties:
+        totalPages:
+          type: integer
+          format: int32
+        totalElements:
+          type: integer
+          format: int64
+        size:
+          type: integer
+          format: int32
+        content:
+          type: array
+          items:
+            $ref: '#/components/schemas/Post'
+        number:
+          type: integer
+          format: int32
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        pageable:
+          $ref: '#/components/schemas/PageableObject'
+        numberOfElements:
+          type: integer
+          format: int32
+        first:
+          type: boolean
+        last:
+          type: boolean
+        empty:
+          type: boolean
+    PageableObject:
+      type: object
+      properties:
+        offset:
+          type: integer
+          format: int64
+        sort:
+          $ref: '#/components/schemas/SortObject'
+        pageNumber:
+          type: integer
+          format: int32
+        pageSize:
+          type: integer
+          format: int32
+        paged:
+          type: boolean
+        unpaged:
+          type: boolean
+    SortObject:
+      type: object
+      properties:
+        empty:
+          type: boolean
+        sorted:
+          type: boolean
+        unsorted:
+          type: boolean

@@ -1,0 +1,143 @@
+openapi: 3.0.1
+info:
+  title: OpenAPI definition
+  version: v0
+servers:
+- url: http://172.25.0.8:8060
+  description: Generated server url
+paths:
+  /api/user/update:
+    put:
+      tags:
+      - user-controller
+      operationId: updateUserData
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "200":
+          description: OK
+  /api/user/new:
+    post:
+      tags:
+      - user-controller
+      operationId: registerUser
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/User'
+        required: true
+      responses:
+        "201":
+          description: Created
+  /api/user/security/{user-email}:
+    get:
+      tags:
+      - user-controller
+      operationId: getUserSecurityProfile
+      parameters:
+      - name: user-email
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserSecurityDTO'
+  /api/user/profile/{user-email}:
+    get:
+      tags:
+      - user-controller
+      operationId: getUserProfileData
+      parameters:
+      - name: user-email
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                $ref: '#/components/schemas/UserProfileDataDTO'
+  /api/user/exists/{user-email}:
+    get:
+      tags:
+      - user-controller
+      operationId: checkIfUserExists
+      parameters:
+      - name: user-email
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+          content:
+            '*/*':
+              schema:
+                type: boolean
+  /api/user/delete/{user-email}:
+    delete:
+      tags:
+      - user-controller
+      operationId: deleteUser
+      parameters:
+      - name: user-email
+        in: path
+        required: true
+        schema:
+          type: string
+      responses:
+        "200":
+          description: OK
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+        accountEnabled:
+          type: boolean
+        firstName:
+          type: string
+        lastName:
+          type: string
+        about:
+          type: string
+    UserSecurityDTO:
+      type: object
+      properties:
+        email:
+          type: string
+        password:
+          type: string
+        role:
+          type: string
+        enabled:
+          type: boolean
+    UserProfileDataDTO:
+      type: object
+      properties:
+        email:
+          type: string
+        name:
+          type: string
+        about:
+          type: string
