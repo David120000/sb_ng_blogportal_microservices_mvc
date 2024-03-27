@@ -26,7 +26,7 @@ Mongo-Express(PostsDB)  :   http://localhost:8081
 Other ports are only available for internal microservice communication in Docker networks.
 
 There will be demo data in the databases.
-To test application features, you can register your own account; or with the password 'qweR42!' you can authenticate with the demo accounts listed in ./build/database/bloguserdb/schema.sql file.
+To test application features, you can register your own account; or using the password 'qweR42!' you can authenticate with the demo accounts listed in ./build/database/bloguserdb/schema.sql file.
 
 ## Technical Overview
 
